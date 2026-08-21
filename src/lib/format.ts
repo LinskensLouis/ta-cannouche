@@ -9,6 +9,14 @@ export function euros(cents: number): string {
   return eurosFmt.format(cents / 100);
 }
 
+// Convertit une saisie d'euros ("11,40" / "11.40") en centimes entiers.
+export function eurosToCents(input: string): number | null {
+  const normalized = input.replace(/\s/g, "").replace(",", ".");
+  const value = Number.parseFloat(normalized);
+  if (!Number.isFinite(value) || value < 0) return null;
+  return Math.round(value * 100);
+}
+
 // Format canette en libellé court : "330" → "33 cl".
 export function formatMlLabel(ml: FormatMl): string {
   return `${Number(ml) / 10} cl`;

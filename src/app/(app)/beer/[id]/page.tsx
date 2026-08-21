@@ -76,13 +76,21 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
         )}
       </div>
 
-      {/* Action primaire */}
-      <Link
-        href={`/beer/${id}/noter`}
-        className="flex min-h-12 items-center justify-center rounded-lg bg-serigraphie px-4 font-semibold text-alu-fond"
-      >
-        Enregistrer une dégustation
-      </Link>
+      {/* Actions primaires */}
+      <div className="flex flex-col gap-2">
+        <Link
+          href={`/beer/${id}/noter`}
+          className="flex min-h-12 items-center justify-center rounded-lg bg-serigraphie px-4 font-semibold text-alu-fond"
+        >
+          Enregistrer une dégustation
+        </Link>
+        <Link
+          href={`/beer/${id}/achat`}
+          className="flex min-h-12 items-center justify-center rounded-lg border border-white/10 px-4 text-alu-brosse active:bg-white/5"
+        >
+          Enregistrer un achat
+        </Link>
+      </div>
 
       {/* Mon historique sur cette canette */}
       {history && history.length > 0 && (

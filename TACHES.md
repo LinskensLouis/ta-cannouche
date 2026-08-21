@@ -83,13 +83,13 @@ Couche de synchronisation en IndexedDB : les écritures sont mises en file quand
 ## Sprint 4 — Budget et classements
 **Objectif de fin de sprint :** MVP diffusable au groupe.
 
-- **S4-01** · Saisie d'achat : `total_price_cents`, `pack_size`, `pack_count`, enseigne, date.
-- **S4-02** · Calcul dérivé du prix unitaire et du prix au litre.
-- **S4-03** · Écran Stats : dépense totale, dépense moyenne par semaine active, volume consommé.
-- **S4-04** · Graphique de conso dans le temps (Recharts), filtres 30 j / 3 mois / 1 an / tout.
-- **S4-05** · Top des canettes du groupe.
-- **S4-06** · Palmarès personnel.
-- **S4-07** · États vides explicites partout — « Scanne ta première cannouche », jamais un `0,00 €` trompeur.
+- **S4-01** · `fait` · Saisie d'achat : prix (centimes), taille de lot, nb de lots, enseigne, date.
+- **S4-02** · `fait` · Prix unitaire et prix au litre calculés en direct dans le formulaire.
+- **S4-03** · `fait` · Écran Stats : dépense totale, moyenne par semaine active, volume, nb dégustations.
+- **S4-04** · `fait` · Graphique de conso (Recharts), filtres 30 j / 3 mois / 1 an / tout.
+- **S4-05** · `fait` · Top des canettes du groupe (bayésien).
+- **S4-06** · `fait` · Palmarès personnel.
+- **S4-07** · `fait` · États vides explicites (feed, recherche, stats, scan).
 
 **Fin du sprint 4 : on livre au groupe.** Les sprints suivants s'arbitrent sur l'usage réel, pas sur les intuitions de départ.
 
