@@ -56,8 +56,8 @@ Les specs complètes sont dans **`SPECS.md`**. Les points sur lesquels tu ne doi
 
 | Couche | Choix |
 |---|---|
-| Front | Next.js 15 (App Router) + TypeScript strict |
-| Style | Tailwind CSS + shadcn/ui |
+| Front | Next.js 16 (App Router) + TypeScript strict |
+| Style | Tailwind CSS v4 + shadcn/ui |
 | Backend / BDD | Supabase (Postgres, Auth, Storage) |
 | Graphiques | Recharts |
 | Hébergement | Vercel + Supabase cloud |
