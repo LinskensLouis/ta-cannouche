@@ -1,8 +1,9 @@
 import { ScreenHeader, EmptyState } from "@/components/layout/screen";
-import { BeerCard, type BeerCardData } from "@/components/beer/beer-card";
-import { createClient } from "@/lib/supabase/server";
+import { BeerCard } from "@/components/beer/beer-card";
+import { SearchInput } from "@/components/beer/search-input";
+import { searchBeers } from "@/lib/beers/search";
 
-// Recherche par nom dans le référentiel (S2-06).
+// Recherche par nom, brasserie/marque ou style (S2-06).
 export default async function RecherchePage({
   searchParams,
 }: {
@@ -10,39 +11,14 @@ export default async function RecherchePage({
 }) {
   const { q } = await searchParams;
   const query = q?.trim() ?? "";
-
-  let beers: BeerCardData[] = [];
-  if (query.length >= 2) {
-    const supabase = await createClient();
-    const { data } = await supabase
-      .from("beers")
-      .select("id, name, format_ml, image_url, breweries(name)")
-      .ilike("name", `%${query}%`)
-      .order("name")
-      .limit(30);
-    beers = (data ?? []).map((b) => ({
-      id: b.id,
-      name: b.name,
-      format_ml: b.format_ml,
-      image_url: b.image_url,
-      brewery: b.breweries?.name ?? null,
-    }));
-  }
+  const beers = query.length >= 2 ? await searchBeers(query) : [];
 
   return (
     <>
-      <ScreenHeader title="Recherche" subtitle="Retrouve une canette par son nom." />
+      <ScreenHeader title="Recherche" subtitle="Par nom, marque (8.6…) ou style." />
 
       <div className="px-5">
-        <form method="get">
-          <input
-            name="q"
-            defaultValue={query}
-            autoFocus
-            placeholder="Chouffe, IPA, Corona…"
-            className="min-h-12 w-full rounded-lg bg-alu-surface px-4 text-base outline-none focus-visible:ring-2 focus-visible:ring-serigraphie"
-          />
-        </form>
+        <SearchInput defaultValue={query} />
       </div>
 
       <div className="mt-4 flex flex-col gap-2 px-5">
