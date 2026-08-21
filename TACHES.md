@@ -29,7 +29,7 @@ Toutes les tables de `SPECS.md` §4.3 : `profiles`, `breweries`, `beers`, `check
 RLS activée sur **toutes** les tables. Règles : chacun lit les données du groupe, chacun n'écrit et ne modifie que ses propres `checkins`, `purchases` et son profil. Le référentiel `beers` est en lecture pour tous, en écriture pour les membres authentifiés.
 **Terminé quand :** un test prouve qu'un utilisateur A ne peut ni modifier ni supprimer un `checkin` de l'utilisateur B.
 
-### S1-06 · Génération des types — `à faire`
+### S1-06 · Génération des types — `fait`
 `supabase gen types typescript` branché sur un script npm, sortie dans `src/types/database.ts`.
 **Terminé quand :** les types sont importés et utilisés dans le client, et la commande de régénération est documentée dans `JOURNAL.md`.
 

@@ -1,8 +1,8 @@
 import { createBrowserClient } from "@supabase/ssr";
+import type { Database } from "@/types/database";
 
 // Client Supabase côté navigateur. N'utilise QUE les variables NEXT_PUBLIC_* :
 // la clé service_role ne doit jamais atteindre ce fichier.
-// TODO S1-06 : paramétrer avec le type `Database` généré.
 export function createClient() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -13,5 +13,5 @@ export function createClient() {
     );
   }
 
-  return createBrowserClient(url, key);
+  return createBrowserClient<Database>(url, key);
 }

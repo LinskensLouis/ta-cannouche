@@ -8,11 +8,14 @@
 ## État actuel
 
 **Sprint en cours :** 1 — Socle
-**Prochaine tâche :** S1-05 · Politiques RLS
+**Prochaine tâche :** S1-07 · Authentification
 **Projet démarrable :** oui — `npm install` puis `npm run dev`
 
 > ✅ `supabase login` + `link` faits (project ref `cctxlrnuvrgjpemujode`). Le mot de
 > passe base est en cache CLI : `npx supabase db push` fonctionne sans re-saisie.
+>
+> **Régénérer les types après toute migration :** `npm run db:types`
+> (→ `src/types/database.ts`, ne pas éditer à la main ; raccourcis dans `src/types/db.ts`).
 
 ---
 
