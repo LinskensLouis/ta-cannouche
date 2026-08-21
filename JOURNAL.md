@@ -7,9 +7,16 @@
 
 ## État actuel
 
-**Sprint en cours :** 1 — Socle
-**Prochaine tâche :** S1-09 · PWA installable
+**Sprint en cours :** 4 terminé (cœur MVP en place) — reste S1-10 (hors-ligne) + S3-06 (photo)
+**Prochaine tâche :** S1-10 · File d'attente hors-ligne (Must, voir A_TRAITER)
 **Projet démarrable :** oui — `npm install` puis `npm run dev`
+**Boucle MVP fonctionnelle :** scan/saisie code-barres → Open Food Facts → fiche →
+note languette → feed + historique + note du groupe ; achat → prix/L → stats,
+graphique, classements. Testée de bout en bout dans le navigateur.
+
+> 👉 **Au retour, lis `A_TRAITER.md` en premier** : GitHub à pousser, file
+> hors-ligne (Must) à finir, photo à faire, scan caméra + PWA à tester sur ton
+> iPhone, et 2 données/comptes de test à nettoyer.
 
 > ✅ `supabase login` + `link` faits (project ref `cctxlrnuvrgjpemujode`). Le mot de
 > passe base est en cache CLI : `npx supabase db push` fonctionne sans re-saisie.
@@ -54,6 +61,26 @@
 > Session menée en autonomie à la demande de Louis, cap sur un MVP quasi
 > fonctionnel. Priorité : interface utilisable d'abord. Blocages consignés dans
 > `A_TRAITER.md`.
+
+**Sprints 2, 3 et 4 réalisés en plus du sprint 1 (voir détail par tâche dans TACHES.md).**
+
+- **Sprint 2 (scan & référentiel) :** intégration Open Food Facts testée sur
+  données réelles (`src/lib/off`), résolution code-barres → fiche existante /
+  création auto / formulaire pré-rempli, abstraction de scan (natif + zxing iOS),
+  écran de scan avec saisie manuelle, fiche bière, recherche par nom. Flux
+  code-barres → OFF → fiche validé de bout en bout.
+- **Sprint 3 (notation) :** composant languette (glissement, pas de 0,5,
+  haptique), formulaire de dégustation, enregistrement en ligne, historique
+  perso, note bayésienne, feed du groupe. Boucle scan → note → feed validée.
+- **Sprint 4 (budget & classements) :** saisie d'achat + prix/L en direct, écran
+  Stats (dépense, moyenne/semaine active, volume), graphique Recharts, top
+  groupe + palmarès. Flux achat → stats validé.
+- **Dépendances ajoutées (autorisées) :** `sharp` (dev, icônes), `@zxing/browser`
+  + `@zxing/library` (scan iOS), `recharts` (graphiques).
+- **Migrations :** `001` schéma, `002` RLS, `003` trigger profil. Config auth
+  poussée (`config push`) pour désactiver la confirmation d'email.
+- **Reste (voir A_TRAITER) :** S1-10 file hors-ligne (Must), S3-06 photo, scan
+  caméra + PWA à tester sur appareil, sprint 5 (enseignes/social) non entamé.
 
 - **S1-05 · Politiques RLS — fait.** `002_rls_policies.sql`. Groupe fermé : tout
   authentifié lit référentiel + activité ; écriture réservée au propriétaire ;
