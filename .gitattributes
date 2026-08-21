@@ -1,0 +1,3 @@
+# Le dépôt stocke des fins de ligne LF. Le poste Windows garde ses CRLF localement,
+# et Vercel (Linux) reçoit du LF. Évite un diff parasite sur tout le dépôt.
+* text=auto eol=lf
