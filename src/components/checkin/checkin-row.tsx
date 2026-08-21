@@ -11,6 +11,7 @@ export type CheckinRowData = {
   pseudo?: string; // affiché dans le feed de groupe
   beerName?: string; // affiché dans le feed
   beerId?: string;
+  editHref?: string; // si présent, la ligne mène à l'écran de modification
 };
 
 // Une ligne de dégustation, réutilisée par l'historique et le feed.
@@ -54,5 +55,6 @@ export function CheckinRow({ checkin }: { checkin: CheckinRowData }) {
     </div>
   );
 
-  return checkin.beerId ? <Link href={`/beer/${checkin.beerId}`}>{inner}</Link> : inner;
+  const href = checkin.editHref ?? (checkin.beerId ? `/beer/${checkin.beerId}` : null);
+  return href ? <Link href={href}>{inner}</Link> : inner;
 }

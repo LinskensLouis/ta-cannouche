@@ -11,16 +11,30 @@ import { submitCheckin } from "@/lib/offline/sync";
 import { FORMATS, type CheckinPayload } from "@/lib/offline/types";
 import { compressImage } from "@/lib/photo/compress";
 import { uploadCheckinPhoto } from "@/lib/photo/upload";
+import { updateCheckinAction } from "@/app/(app)/checkin/[id]/modifier/actions";
 import type { CheckinContext, FormatMl } from "@/types/db";
+
+// Dégustation existante à modifier. Absent = mode création.
+export type CheckinEditData = {
+  id: string;
+  rating: number | null;
+  comment: string | null;
+  quantity_ml: number | null;
+  context: CheckinContext | null;
+  consumed_at: string; // ISO
+  photo_url: string | null;
+};
 
 export function CheckinForm({
   beerId,
   defaultFormat,
   today,
+  edit,
 }: {
   beerId: string;
   defaultFormat: FormatMl;
   today: string;
+  edit?: CheckinEditData;
 }) {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -28,6 +42,14 @@ export function CheckinForm({
   const [queued, setQueued] = useState(false);
   const [photo, setPhoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+
+  const isEdit = !!edit;
+  const initialFormat: FormatMl =
+    edit && FORMATS.includes(String(edit.quantity_ml) as FormatMl)
+      ? (String(edit.quantity_ml) as FormatMl)
+      : defaultFormat;
+  // Photo affichée : nouvel aperçu prioritaire, sinon la photo existante.
+  const shownPhoto = preview ?? edit?.photo_url ?? null;
 
   function onPickPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0] ?? null;
@@ -54,21 +76,21 @@ export function CheckinForm({
 
     setBusy(true);
 
-    // Photo : compression client à ~1200 px puis upload. Best-effort — si l'upload
-    // échoue (hors-ligne), on enregistre quand même la dégustation sans photo.
-    let photoUrl: string | null = null;
+    // Photo : compression client à ~1200 px puis upload. En édition, si aucune
+    // nouvelle photo n'est choisie, on garde l'existante.
+    let photoUrl: string | null = edit?.photo_url ?? null;
     if (photo) {
       try {
         const compressed = await compressImage(photo);
-        photoUrl = await uploadCheckinPhoto(compressed);
-        if (!photoUrl) setError("Photo non envoyée (réseau ?), dégustation enregistrée sans.");
+        const uploaded = await uploadCheckinPhoto(compressed);
+        if (uploaded) photoUrl = uploaded;
+        else setError("Photo non envoyée (réseau ?), enregistrée sans le nouveau cliché.");
       } catch {
-        setError("Photo illisible, dégustation enregistrée sans.");
+        setError("Photo illisible, enregistrée sans le nouveau cliché.");
       }
     }
 
-    const payload: CheckinPayload = {
-      beer_id: beerId,
+    const base = {
       rating: ratingRaw ? Number(ratingRaw) : null,
       comment: String(form.get("comment") ?? "").trim() || null,
       quantity_ml: Number(format),
@@ -77,8 +99,21 @@ export function CheckinForm({
       photo_url: photoUrl,
     };
 
-    // Interface optimiste : la dégustation est acceptée localement, puis
-    // synchronisée (immédiatement si réseau, plus tard sinon).
+    // Édition : mise à jour en ligne, puis retour à la fiche.
+    if (edit) {
+      try {
+        await updateCheckinAction(edit.id, { beerId, ...base });
+      } catch (err) {
+        // redirect() lève une exception de contrôle : on la laisse remonter.
+        if (err && typeof err === "object" && "digest" in err) throw err;
+        setError("Modification impossible (réseau ?). Réessaie une fois connecté.");
+        setBusy(false);
+      }
+      return;
+    }
+
+    // Création : interface optimiste + file hors-ligne.
+    const payload: CheckinPayload = { beer_id: beerId, ...base };
     let synced = false;
     try {
       synced = await submitCheckin(payload);
@@ -87,12 +122,9 @@ export function CheckinForm({
     }
 
     if (synced) {
-      // En ligne : la fiche (rendue côté serveur) va se recharger avec la note.
       router.push(`/beer/${beerId}`);
       router.refresh();
     } else {
-      // Hors-ligne : on NE navigue PAS vers une page serveur (elle ne se
-      // chargerait pas). Confirmation sur place ; la synchro se fera au retour.
       setQueued(true);
       setBusy(false);
     }
@@ -121,12 +153,12 @@ export function CheckinForm({
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-6 px-5 pb-6">
       <div className="rounded-2xl bg-alu-surface p-5">
-        <RatingTab />
+        <RatingTab defaultValue={edit?.rating ?? 0} />
       </div>
 
       <div className="flex flex-col gap-2">
         <span className="text-sm text-alu-mat">Format bu</span>
-        <FormatPicker defaultValue={defaultFormat} />
+        <FormatPicker defaultValue={initialFormat} />
       </div>
 
       <div className="flex flex-col gap-2">
@@ -134,7 +166,13 @@ export function CheckinForm({
         <div className="flex flex-wrap gap-2">
           {CONTEXTS.map((c) => (
             <label key={c} className="cursor-pointer">
-              <input type="radio" name="context" value={c} className="peer sr-only" />
+              <input
+                type="radio"
+                name="context"
+                value={c}
+                defaultChecked={edit?.context === c}
+                className="peer sr-only"
+              />
               <span className="flex min-h-12 items-center rounded-lg bg-alu-surface px-4 text-sm peer-checked:bg-serigraphie peer-checked:text-alu-fond">
                 {CONTEXT_LABELS[c]}
               </span>
@@ -148,7 +186,7 @@ export function CheckinForm({
         <input
           type="date"
           name="consumed_at"
-          defaultValue={today}
+          defaultValue={edit ? edit.consumed_at.slice(0, 10) : today}
           max={today}
           className="min-h-12 rounded-lg bg-alu-surface px-4 font-mono text-base outline-none focus-visible:ring-2 focus-visible:ring-serigraphie"
         />
@@ -159,6 +197,7 @@ export function CheckinForm({
         <textarea
           name="comment"
           rows={3}
+          defaultValue={edit?.comment ?? ""}
           placeholder="Amertume, arômes, le moment…"
           className="rounded-lg bg-alu-surface px-4 py-3 text-base outline-none focus-visible:ring-2 focus-visible:ring-serigraphie"
         />
@@ -168,18 +207,12 @@ export function CheckinForm({
       <div className="flex flex-col gap-2">
         <span className="text-sm text-alu-mat">Photo</span>
         <label className="flex min-h-12 cursor-pointer items-center justify-center rounded-lg border border-dashed border-white/15 px-4 text-sm text-alu-mat active:bg-white/5">
-          {photo ? "Changer la photo" : "Ajouter une photo de la canette"}
-          <input
-            type="file"
-            accept="image/*"
-            capture="environment"
-            onChange={onPickPhoto}
-            className="sr-only"
-          />
+          {shownPhoto ? "Changer la photo" : "Ajouter une photo de la canette"}
+          <input type="file" accept="image/*" capture="environment" onChange={onPickPhoto} className="sr-only" />
         </label>
-        {preview && (
+        {shownPhoto && (
           <div className="relative h-48 w-full overflow-hidden rounded-lg bg-alu-surface">
-            <Image src={preview} alt="Aperçu" fill unoptimized className="object-cover" />
+            <Image src={shownPhoto} alt="Aperçu" fill unoptimized className="object-cover" />
           </div>
         )}
       </div>
@@ -191,7 +224,7 @@ export function CheckinForm({
         disabled={busy}
         className="min-h-12 rounded-lg bg-serigraphie px-4 font-semibold text-alu-fond disabled:opacity-50"
       >
-        {busy ? "…" : "Enregistrer la dégustation"}
+        {busy ? "…" : isEdit ? "Enregistrer les modifications" : "Enregistrer la dégustation"}
       </button>
     </form>
   );

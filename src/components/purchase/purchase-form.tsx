@@ -1,28 +1,45 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { createPurchaseAction, type PurchaseState } from "@/app/(app)/beer/[id]/achat/actions";
+import { useState } from "react";
+import { createPurchaseAction } from "@/app/(app)/beer/[id]/achat/actions";
+import { updatePurchaseAction } from "@/app/(app)/purchase/[id]/modifier/actions";
 import { eurosToCents, euros, pricePerLiter } from "@/lib/format";
 import type { FormatMl } from "@/types/db";
 
 const PACK_SIZES = [1, 4, 6, 12, 24];
 
+// Achat existant à modifier. Absent = mode création.
+export type PurchaseEditData = {
+  id: string;
+  total_price_cents: number;
+  pack_size: number;
+  pack_count: number;
+  purchased_at: string; // YYYY-MM-DD
+  storeName: string | null;
+};
+
+function isRedirect(err: unknown): boolean {
+  return !!err && typeof err === "object" && "digest" in err;
+}
+
 export function PurchaseForm({
   beerId,
   formatMl,
   today,
+  edit,
 }: {
   beerId: string;
   formatMl: FormatMl;
   today: string;
+  edit?: PurchaseEditData;
 }) {
-  const [state, formAction, pending] = useActionState<PurchaseState, FormData>(
-    createPurchaseAction,
-    {},
+  const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [price, setPrice] = useState(
+    edit ? (edit.total_price_cents / 100).toFixed(2).replace(".", ",") : "",
   );
-  const [price, setPrice] = useState("");
-  const [packSize, setPackSize] = useState(6);
-  const [packCount, setPackCount] = useState(1);
+  const [packSize, setPackSize] = useState(edit?.pack_size ?? 6);
+  const [packCount, setPackCount] = useState(edit?.pack_count ?? 1);
 
   // Aperçu prix unitaire et prix au litre (S4-02), recalculé en direct.
   const cents = eurosToCents(price);
@@ -33,8 +50,43 @@ export function PurchaseForm({
   const inputClass =
     "min-h-12 w-full rounded-lg bg-alu-surface px-4 text-base outline-none focus-visible:ring-2 focus-visible:ring-serigraphie";
 
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+    const priceCents = eurosToCents(price);
+    if (priceCents == null) {
+      setError("Prix invalide.");
+      return;
+    }
+    setBusy(true);
+
+    try {
+      if (edit) {
+        await updatePurchaseAction(edit.id, {
+          beerId,
+          storeName: String(new FormData(e.currentTarget).get("store") ?? "").trim() || null,
+          totalPriceCents: priceCents,
+          packSize,
+          packCount,
+          purchasedAt:
+            String(new FormData(e.currentTarget).get("purchased_at") ?? "").trim() || today,
+        });
+      } else {
+        const res = await createPurchaseAction({}, new FormData(e.currentTarget));
+        if (res?.error) {
+          setError(res.error);
+          setBusy(false);
+        }
+      }
+    } catch (err) {
+      if (isRedirect(err)) throw err; // navigation attendue
+      setError("Enregistrement impossible (réseau ?). Réessaie.");
+      setBusy(false);
+    }
+  }
+
   return (
-    <form action={formAction} className="flex flex-col gap-5 px-5 pb-6">
+    <form onSubmit={onSubmit} className="flex flex-col gap-5 px-5 pb-6">
       <input type="hidden" name="beer_id" value={beerId} />
       <input type="hidden" name="pack_size" value={packSize} />
 
@@ -83,12 +135,23 @@ export function PurchaseForm({
 
       <label className="flex flex-col gap-1">
         <span className="text-sm text-alu-mat">Enseigne</span>
-        <input name="store" placeholder="Leclerc Mérignac" className={inputClass} />
+        <input
+          name="store"
+          defaultValue={edit?.storeName ?? ""}
+          placeholder="Leclerc Mérignac"
+          className={inputClass}
+        />
       </label>
 
       <label className="flex flex-col gap-1">
         <span className="text-sm text-alu-mat">Date d&apos;achat</span>
-        <input type="date" name="purchased_at" defaultValue={today} max={today} className={`${inputClass} font-mono`} />
+        <input
+          type="date"
+          name="purchased_at"
+          defaultValue={edit ? edit.purchased_at.slice(0, 10) : today}
+          max={today}
+          className={`${inputClass} font-mono`}
+        />
       </label>
 
       {/* Aperçu en direct */}
@@ -101,14 +164,14 @@ export function PurchaseForm({
         </div>
       )}
 
-      {state.error && <p className="text-sm text-serigraphie">{state.error}</p>}
+      {error && <p className="text-sm text-serigraphie">{error}</p>}
 
       <button
         type="submit"
-        disabled={pending}
+        disabled={busy}
         className="min-h-12 rounded-lg bg-serigraphie px-4 font-semibold text-alu-fond disabled:opacity-50"
       >
-        {pending ? "…" : "Enregistrer l'achat"}
+        {busy ? "…" : edit ? "Enregistrer les modifications" : "Enregistrer l'achat"}
       </button>
     </form>
   );

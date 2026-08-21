@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getBeerRating } from "@/lib/beers/stats";
 import { formatMlLabel } from "@/lib/format";
 import { CheckinRow } from "@/components/checkin/checkin-row";
+import { PurchaseRow } from "@/components/purchase/purchase-row";
 
 // Fiche bière (S2-04) : visuel, nom, brasserie, format, degré, note du groupe.
 export default async function BeerPage({ params }: { params: Promise<{ id: string }> }) {
@@ -33,6 +34,16 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
         .eq("beer_id", id)
         .eq("user_id", user.id)
         .order("consumed_at", { ascending: false })
+    : { data: [] };
+
+  // Mes achats de cette canette (S4-01), modifiables.
+  const { data: purchases } = user
+    ? await supabase
+        .from("purchases")
+        .select("id, total_price_cents, pack_size, pack_count, purchased_at, stores(name)")
+        .eq("beer_id", id)
+        .eq("user_id", user.id)
+        .order("purchased_at", { ascending: false })
     : { data: [] };
 
   return (
@@ -92,12 +103,34 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
         </Link>
       </div>
 
-      {/* Mon historique sur cette canette */}
+      {/* Mon historique sur cette canette (chaque ligne est modifiable) */}
       {history && history.length > 0 && (
         <section className="flex flex-col gap-2">
           <h2 className="display text-base text-alu-mat">Mes dégustations</h2>
           {history.map((c) => (
-            <CheckinRow key={c.id} checkin={c} />
+            <CheckinRow key={c.id} checkin={{ ...c, editHref: `/checkin/${c.id}/modifier` }} />
+          ))}
+        </section>
+      )}
+
+      {/* Mes achats de cette canette (chaque ligne est modifiable) */}
+      {purchases && purchases.length > 0 && (
+        <section className="flex flex-col gap-2">
+          <h2 className="display text-base text-alu-mat">Mes achats</h2>
+          {purchases.map((p) => (
+            <PurchaseRow
+              key={p.id}
+              purchase={{
+                id: p.id,
+                total_price_cents: p.total_price_cents,
+                pack_size: p.pack_size,
+                pack_count: p.pack_count,
+                purchased_at: p.purchased_at,
+                storeName: p.stores?.name ?? null,
+                formatMl: beer.format_ml,
+                editHref: `/purchase/${p.id}/modifier`,
+              }}
+            />
           ))}
         </section>
       )}
