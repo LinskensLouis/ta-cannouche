@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Archivo, Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import { RegisterServiceWorker } from "@/components/pwa/register-sw";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 // Display — CLAUDE.md §4.4 demande « Archivo Expanded ». Sur Google Fonts, ce
 // n'est pas une famille distincte : c'est la variable font Archivo avec un axe
@@ -70,6 +72,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-alu-fond text-alu-brosse font-sans">
         {children}
         <RegisterServiceWorker />
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
