@@ -16,10 +16,13 @@
 
 <!-- Les entrées sont ajoutées au fil de la session, plus récentes en bas. -->
 
-### 🔵 GitHub — premier push à faire par toi
-Aucun identifiant GitHub n'est en cache sur la machine et `gh` n'est pas installé.
-Tant que tu n'as pas lancé `git push -u origin main` une fois (auth navigateur),
-je ne peux pas pousser. Tout est committé en local en attendant.
+### 🟢 GitHub + Vercel — faits
+Dépôt poussé sur https://github.com/LinskensLouis/ta-cannouche (le README
+auto-généré par GitHub a été fusionné en gardant le nôtre). Déployé sur
+**https://ta-cannouche.vercel.app** (2 variables publiques, pas de service_role).
+`site_url` Supabase calé sur la prod. Identifiants GitHub en cache : je peux
+pousser directement les prochains correctifs.
+**Reste : le test terrain sur Android** (checklist dans `DEPLOY.md`).
 
 ### 🟠 Confirmation d'email désactivée (S1-07)
 La confirmation d'email était **activée** par défaut sur le projet Supabase, et le
