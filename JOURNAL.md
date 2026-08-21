@@ -8,8 +8,15 @@
 ## État actuel
 
 **Sprint en cours :** 1 — Socle
-**Prochaine tâche :** S1-03 · Projet Supabase et variables d'environnement
+**Prochaine tâche :** S1-04 · Migration initiale du schéma
 **Projet démarrable :** oui — `npm install` puis `npm run dev`
+
+> ⏳ **À faire par Louis avant S1-04** (commandes interactives, dans un terminal PowerShell à la racine) :
+> ```
+> npx supabase login
+> npx supabase link --project-ref cctxlrnuvrgjpemujode
+> ```
+> Le `link` demande le mot de passe de la base (celui noté à la création du projet).
 
 ---
 
@@ -42,6 +49,24 @@
 ---
 
 ## Sessions
+
+### 2026-08-21 — session 3
+
+- **Fait : S1-03 · Projet Supabase et variables d'environnement — fait.**
+  - Dépendances ajoutées (validées) : `@supabase/supabase-js` + `@supabase/ssr` (runtime), `supabase` (devDep, CLI via `npx`).
+  - `npx supabase init` → `supabase/config.toml` (`project_id = "ta-cannouche"`). `.temp` et les `.env*.local` ignorés par le `supabase/.gitignore` posé par la CLI.
+  - Clients écrits dans `src/lib/supabase/` : `client.ts` (navigateur, `createBrowserClient`) et `server.ts` (serveur, `createServerClient` + cookies). Les deux ne lisent que les `NEXT_PUBLIC_*` ; le service_role n'y apparaît jamais. TODO S1-06 : paramétrer avec le type `Database`.
+  - **Connexion vérifiée depuis l'app** : page serveur temporaire interrogeant une table volontairement absente → réponse PostgREST `PGRST205` (table introuvable), qui prouve base atteinte + clé valide. Page supprimée après coup.
+  - Projet Supabase créé par Louis en région EU, `.env.local` renseigné par lui (nouveau format de clés `sb_publishable_` / `sb_secret_`). Je n'ai jamais vu le secret. Project ref : `cctxlrnuvrgjpemujode`.
+  - Vérifié : `typecheck`, `lint`, `build` verts ; `.env.local` absent de l'index Git.
+
+- **Incident corrigé :** `.env.local.example` avait disparu du disque (renommé en `.env.local` lors de la saisie des clés). Recréé sans aucune valeur — il doit rester versionné (CLAUDE.md §6/§8).
+
+- **Reste à faire :** S1-04 (schéma). **Prérequis Louis** : lancer `npx supabase login` puis `link` (voir encart en haut). Sans ça je ne peux pas pousser la migration ; je peux quand même l'écrire.
+
+- **À vérifier :** rien sur téléphone à ce stade.
+
+---
 
 ### 2026-08-21 — session 2
 

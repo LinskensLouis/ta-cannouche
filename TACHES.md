@@ -16,7 +16,7 @@ Next.js 15 (App Router), TypeScript strict, Tailwind, ESLint. Structure de dossi
 Les six couleurs et les trois polices de `CLAUDE.md` §4.4 déclarées dans le bloc `@theme` de `src/app/globals.css` (Tailwind v4 n'utilise plus `tailwind.config.ts`) et chargées via `next/font`.
 **Terminé quand :** une page de démonstration affiche chaque token et chaque police, et aucune couleur n'est écrite en dur.
 
-### S1-03 · Projet Supabase et variables d'environnement — `à faire`
+### S1-03 · Projet Supabase et variables d'environnement — `fait`
 Création du projet, récupération des clés, mise en place de `.env.local` et de `.env.local.example`, client Supabase dans `src/lib/supabase/`.
 **Terminé quand :** une requête de test aboutit depuis l'app, et aucune clé n'est présente dans un fichier suivi par Git.
 **Point de vigilance :** la clé `service_role` ne sort jamais du serveur.
