@@ -8,7 +8,7 @@
 ## État actuel
 
 **Sprint en cours :** 1 — Socle
-**Prochaine tâche :** S1-07 · Authentification
+**Prochaine tâche :** S1-09 · PWA installable
 **Projet démarrable :** oui — `npm install` puis `npm run dev`
 
 > ✅ `supabase login` + `link` faits (project ref `cctxlrnuvrgjpemujode`). Le mot de
@@ -48,6 +48,35 @@
 ---
 
 ## Sessions
+
+### 2026-08-21 — session 5 (autonome)
+
+> Session menée en autonomie à la demande de Louis, cap sur un MVP quasi
+> fonctionnel. Priorité : interface utilisable d'abord. Blocages consignés dans
+> `A_TRAITER.md`.
+
+- **S1-05 · Politiques RLS — fait.** `002_rls_policies.sql`. Groupe fermé : tout
+  authentifié lit référentiel + activité ; écriture réservée au propriétaire ;
+  `purchases` visibles du groupe seulement si `expenses_visibility = 'group'`.
+  Isolation prouvée par test à 2 utilisateurs (B ne peut ni modifier, ni
+  supprimer, ni usurper le check-in de A ; ne voit pas son achat privé).
+- **S1-06 · Types générés — fait.** `npm run db:types` → `src/types/database.ts`,
+  clients paramétrés `<Database>`, raccourcis `Row/Insert/Update` dans `src/types/db.ts`.
+- **S1-07 · Authentification — fait.** Écrans connexion/inscription mobile,
+  actions serveur, trigger `handle_new_user` (`003_`, gère les collisions de
+  pseudo), proxy Next 16 (session + protection des routes). Parcours complet
+  testé via l'UI réelle (inscription → session → app). **Next 16 : `middleware`
+  renommé `proxy`** (fichier `src/proxy.ts`). **Confirmation d'email désactivée**
+  via `config push` (voir A_TRAITER : rate limit du service email intégré).
+- **S1-08 · Coquille mobile — fait.** Route group `(app)`, navigation basse 5
+  onglets (Feed · Recherche · **Scan** central proéminent · Stats · Profil),
+  5 pages avec états vides à la bonne voix, safe areas iOS, cibles ≥ 48 px
+  (vérifié : 78×64 / 64×64). Profil affiche le pseudo réel + déconnexion.
+
+- **À vérifier sur un vrai téléphone :** installation PWA (S1-09), rendu de la
+  nav sous la barre de gestes iOS, lisibilité en lumière basse.
+
+---
 
 ### 2026-08-21 — session 4
 

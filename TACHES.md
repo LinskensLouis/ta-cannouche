@@ -37,7 +37,7 @@ RLS activée sur **toutes** les tables. Règles : chacun lit les données du gro
 Inscription et connexion par email + mot de passe. Création automatique du `profile` (pseudo, avatar) à l'inscription, via trigger Postgres. Écrans de connexion et d'inscription au design mobile.
 **Terminé quand :** je crée un compte depuis mon téléphone, je me reconnecte, et le profil existe en base.
 
-### S1-08 · Coquille mobile — `à faire`
+### S1-08 · Coquille mobile — `fait`
 Barre de navigation basse fixe à 5 onglets — Feed · Recherche · **Scan** · Stats · Profil — avec le bouton scan en position centrale proéminente. Cinq pages vides. Gestion de `env(safe-area-inset-bottom)`.
 **Terminé quand :** la navigation est utilisable au pouce sur un vrai téléphone, ne passe pas sous la barre de gestes iOS, et toutes les cibles font au moins 48 px.
 
