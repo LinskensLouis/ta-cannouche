@@ -58,6 +58,20 @@ Le parcours de scan a créé une vraie bière « 1664 » (via Open Food Facts) q
 reste en base — c'est une vraie canette, utile comme donnée d'aperçu. Supprime-la
 si tu veux repartir d'une base vierge.
 
+### 🔴 File d'attente hors-ligne (S1-10) — non implémentée, c'est un Must
+E1-5 (enregistrer une dégustation sans réseau) est un **Must** du MVP et n'est
+**pas** encore là. Aujourd'hui l'enregistrement d'une dégustation passe par une
+action serveur **en ligne** (interface optimiste + revalidation) : sans réseau,
+l'enregistrement échoue. La couche IndexedDB (mise en file + rejeu au retour du
+réseau + indicateur de synchro) reste à construire — c'est le prochain gros
+morceau d'infra. Je l'ai laissée de côté volontairement plutôt que d'en livrer
+une version à moitié testable qui risquerait de perdre des données. **À faire
+avant diffusion au groupe**, ou à me redemander en priorité.
+
+### 🟡 Photo de dégustation (S3-06) — reporté
+Nécessite un bucket Supabase Storage + compression canvas côté client à ~1200 px.
+Pas bloquant pour la boucle note. À faire quand tu voudras les photos.
+
 ### 🟡 Utilisateur de test à supprimer
 Un compte `louis.ui.test@example.invalid` a été créé pour tester l'UI d'auth et
 laissé connecté dans le navigateur de preview afin de visualiser les pages

@@ -69,12 +69,12 @@ Couche de synchronisation en IndexedDB : les écritures sont mises en file quand
 ## Sprint 3 — Notation
 **Objectif de fin de sprint :** je note une canette et je vois la moyenne du groupe.
 
-- **S3-01** · Composant de notation « languette » : anneau rempli au glissement horizontal, de 0,5 à 5 par pas de 0,5, retour haptique, tap direct possible. **C'est le composant le plus utilisé de l'app, il mérite d'être soigné.**
-- **S3-02** · Formulaire de dégustation : note facultative, commentaire, format en quatre boutons, date modifiable, contexte.
-- **S3-03** · Enregistrement en interface optimiste, branché sur la file du S1-10.
-- **S3-04** · Historique personnel des dégustations d'une canette.
-- **S3-05** · Note moyenne par canette, en moyenne bayésienne (`m = 3`).
-- **S3-06** · Photo de dégustation avec compression client à ~1200 px avant upload.
+- **S3-01** · `fait` · Composant languette : 5 languettes remplies au glissement, 0,5→5 par pas de 0,5, retour haptique (`navigator.vibrate`), tap/drag/clavier.
+- **S3-02** · `fait` · Formulaire de dégustation : note facultative, commentaire, format 4 boutons (pré-rempli), date, contexte.
+- **S3-03** · `fait` (en ligne) · Enregistrement via action serveur + revalidation. **File hors-ligne S1-10 non branchée** → voir A_TRAITER.
+- **S3-04** · `fait` · Historique personnel sur la fiche.
+- **S3-05** · `fait` · Note bayésienne (`m = 3`) dans `src/lib/beers/stats.ts`.
+- **S3-06** · `à faire` · Photo de dégustation + compression client. Reporté (nécessite un bucket Storage) → voir A_TRAITER.
 
 **Critère d'acceptation du sprint :** le parcours « scan → note → enregistré » tient en moins de 15 secondes et 3 taps.
 

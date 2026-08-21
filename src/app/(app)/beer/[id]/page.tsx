@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getBeerRating } from "@/lib/beers/stats";
 import { formatMlLabel } from "@/lib/format";
+import { CheckinRow } from "@/components/checkin/checkin-row";
 
 // Fiche bière (S2-04) : visuel, nom, brasserie, format, degré, note du groupe.
 export default async function BeerPage({ params }: { params: Promise<{ id: string }> }) {
@@ -20,6 +21,19 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
 
   const rating = await getBeerRating(id);
   const brewery = beer.breweries?.name ?? null;
+
+  // Mon historique sur cette canette (S3-04).
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  const { data: history } = user
+    ? await supabase
+        .from("checkins")
+        .select("id, rating, comment, consumed_at")
+        .eq("beer_id", id)
+        .eq("user_id", user.id)
+        .order("consumed_at", { ascending: false })
+    : { data: [] };
 
   return (
     <div className="flex flex-col gap-5 px-5 pt-6">
@@ -69,6 +83,16 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
       >
         Enregistrer une dégustation
       </Link>
+
+      {/* Mon historique sur cette canette */}
+      {history && history.length > 0 && (
+        <section className="flex flex-col gap-2">
+          <h2 className="display text-base text-alu-mat">Mes dégustations</h2>
+          {history.map((c) => (
+            <CheckinRow key={c.id} checkin={c} />
+          ))}
+        </section>
+      )}
     </div>
   );
 }
