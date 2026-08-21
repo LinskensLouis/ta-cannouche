@@ -7,6 +7,14 @@
 
 ## Actions restantes (de ton côté, pas de code)
 
+- 🟠 **Couper l'inscription publique quand tout le groupe est inscrit.** L'app est
+  ouverte : n'importe qui avec le lien peut créer un compte. Un `noindex` limite
+  la découverte (fait), mais pour verrouiller vraiment, une fois tous les potes
+  dedans : dans `supabase/config.toml`, passer `[auth] enable_signup = false` **et**
+  `[auth.email] enable_signup = false`, puis `npx supabase config push`. Pour
+  ajouter quelqu'un ensuite : le recréer côté dashboard, ou rouvrir temporairement.
+  Dis-moi quand vous êtes au complet et je le fais.
+
 - 🔵 **Activer Analytics + Speed Insights** dans le dashboard Vercel :
   Projet → onglet **Analytics** → *Enable*, puis onglet **Speed Insights** → *Enable*.
   Le code est déjà en place ; sans activation, pas de données (ni d'erreur).

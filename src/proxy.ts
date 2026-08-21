@@ -8,8 +8,9 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  // Tout sauf les assets statiques et les fichiers PWA (manifest, sw, icônes).
+  // Tout sauf les assets statiques, les fichiers PWA (manifest, sw, icônes) et
+  // les fichiers publics des crawlers (robots, sitemap).
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|icons/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
+    "/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|sw.js|robots.txt|sitemap.xml|icons/|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)",
   ],
 };

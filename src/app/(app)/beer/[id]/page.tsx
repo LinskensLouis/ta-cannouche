@@ -3,7 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getBeerRating } from "@/lib/beers/stats";
-import { formatMlLabel } from "@/lib/format";
+import { formatMlLabel, displayBrewery } from "@/lib/format";
 import { CheckinRow } from "@/components/checkin/checkin-row";
 import { PurchaseRow } from "@/components/purchase/purchase-row";
 
@@ -21,7 +21,7 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
   if (!beer) notFound();
 
   const rating = await getBeerRating(id);
-  const brewery = beer.breweries?.name ?? null;
+  const brewery = displayBrewery(beer.name, beer.breweries?.name);
 
   // Mon historique sur cette canette (S3-04).
   const {

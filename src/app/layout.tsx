@@ -34,6 +34,8 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Ta Cannouche",
   description: "Carnet de dégustation de canettes, suivi de budget et repérage en rayon.",
+  // App privée : pas d'indexation par les moteurs de recherche.
+  robots: { index: false, follow: false },
   manifest: "/manifest.webmanifest",
   applicationName: "Ta Cannouche",
   appleWebApp: {

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { formatMlLabel } from "@/lib/format";
+import { formatMlLabel, displayBrewery } from "@/lib/format";
 import type { FormatMl } from "@/types/db";
 
 export type BeerCardData = {
@@ -29,7 +29,7 @@ export function BeerCard({ beer }: { beer: BeerCardData }) {
         <span className="truncate text-base text-alu-brosse">{beer.name}</span>
         <span className="font-mono text-xs text-alu-mat">
           {formatMlLabel(beer.format_ml)}
-          {beer.brewery && ` · ${beer.brewery}`}
+          {displayBrewery(beer.name, beer.brewery) && ` · ${beer.brewery}`}
         </span>
       </div>
     </Link>

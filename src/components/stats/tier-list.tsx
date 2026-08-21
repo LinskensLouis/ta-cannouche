@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Languette } from "@/components/beer/languette";
 import type { Tier } from "@/lib/stats/tierlist";
 
 // Dégradé des tiers via l'OPACITÉ de l'orange sérigraphie (S plein → D pâle) :
@@ -10,17 +11,6 @@ const BADGE: Record<string, string> = {
   C: "bg-serigraphie/25 text-alu-brosse",
   D: "bg-serigraphie/12 text-alu-brosse",
 };
-
-// Puce « languette » : le dessus de canette stylisé, signature de l'app.
-// Silhouette pleine + trou évidé sur le fond, plus lisible qu'un contour.
-function Languette() {
-  return (
-    <svg viewBox="0 0 24 24" width="12" height="15" className="shrink-0" aria-hidden>
-      <rect x="7" y="2" width="10" height="20" rx="5" fill="currentColor" />
-      <ellipse cx="12" cy="8" rx="2.6" ry="3.4" fill="var(--color-alu-fond)" />
-    </svg>
-  );
-}
 
 export function TierList({ tiers }: { tiers: Tier[] }) {
   return (
@@ -46,7 +36,7 @@ export function TierList({ tiers }: { tiers: Tier[] }) {
                   href={`/beer/${beer.id}`}
                   className="flex items-center gap-1.5 rounded-full bg-alu-fond px-2.5 py-1.5 text-serigraphie active:bg-white/5"
                 >
-                  <Languette />
+                  <Languette width={12} className="shrink-0" />
                   <span className="max-w-[130px] truncate text-sm text-alu-brosse">{beer.name}</span>
                   <span className="font-mono text-xs text-serigraphie">
                     {beer.avg.toFixed(1).replace(".", ",")}

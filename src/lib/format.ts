@@ -22,6 +22,13 @@ export function formatMlLabel(ml: FormatMl): string {
   return `${Number(ml) / 10} cl`;
 }
 
+// Marque à afficher : masquée si identique au nom (OFF renvoie parfois les deux
+// à l'identique, ex. « 1664 » nom ET brasserie).
+export function displayBrewery(name: string, brewery: string | null | undefined): string | null {
+  if (!brewery) return null;
+  return brewery.trim().toLowerCase() === name.trim().toLowerCase() ? null : brewery;
+}
+
 // Prix au litre à partir d'un prix total (centimes), d'un volume unitaire (ml)
 // et du nombre d'unités. Renvoie une chaîne "x,xx €/L" ou null si indéterminé.
 export function pricePerLiter(totalCents: number, unitMl: number, units: number): string | null {
