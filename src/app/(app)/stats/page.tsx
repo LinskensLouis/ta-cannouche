@@ -2,9 +2,11 @@ import Link from "next/link";
 import { ScreenHeader, EmptyState } from "@/components/layout/screen";
 import { ConsumptionChart } from "@/components/stats/consumption-chart";
 import { RankingList } from "@/components/stats/ranking-list";
+import { TierList } from "@/components/stats/tier-list";
 import { createClient } from "@/lib/supabase/server";
 import { getUserStats, getConsumptionSeries, PERIODS, type Period } from "@/lib/stats/user";
-import { getGroupTopBeers, getUserTopBeers } from "@/lib/stats/rankings";
+import { getUserTopBeers } from "@/lib/stats/rankings";
+import { getGroupTierList } from "@/lib/stats/tierlist";
 import { euros } from "@/lib/format";
 
 function Stat({ value, label }: { value: string; label: string }) {
@@ -30,12 +32,14 @@ export default async function StatsPage({
   } = await supabase.auth.getUser();
   if (!user) return null;
 
-  const [stats, series, groupTop, myTop] = await Promise.all([
+  const [stats, series, tiers, myTop] = await Promise.all([
     getUserStats(user.id),
     getConsumptionSeries(user.id, period, new Date()),
-    getGroupTopBeers(),
+    getGroupTierList(),
     getUserTopBeers(user.id),
   ]);
+
+  const hasRatings = tiers.some((t) => t.beers.length > 0);
 
   const nothing = stats.checkinCount === 0 && stats.totalSpentCents === 0;
 
@@ -91,11 +95,11 @@ export default async function StatsPage({
             )}
           </div>
 
-          {/* Classements */}
-          {groupTop.length > 0 && (
+          {/* Tier list du groupe : meilleures → pires */}
+          {hasRatings && (
             <section className="flex flex-col gap-2">
-              <h2 className="display text-base">Top du groupe</h2>
-              <RankingList beers={groupTop} />
+              <h2 className="display text-base">Tier list du groupe</h2>
+              <TierList tiers={tiers} />
             </section>
           )}
           {myTop.length > 0 && (
