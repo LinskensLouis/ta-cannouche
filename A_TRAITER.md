@@ -72,7 +72,12 @@ Le parcours a créé une vraie **canette** « 1664 » 33 cl (via Open Food Facts
 laissée comme donnée d'aperçu. L'ancienne « 1664 » qui était en fait une
 **bouteille** a été supprimée. Supprime la canette aussi si tu veux une base vierge.
 
-### 🟢 File d'attente hors-ligne (S1-10) — faite
+### 🟢 File d'attente hors-ligne (S1-10) — faite + corrigée
+**Correctif (test terrain Loulou) :** en vrai mode avion, l'app redirigeait après
+enregistrement vers la fiche bière (rendue côté serveur) qui ne peut pas se
+charger sans réseau → écran cassé. Corrigé : hors-ligne, on n'effectue plus de
+navigation serveur, on affiche une confirmation sur place et le bandeau de
+synchro. En ligne, comportement inchangé. Re-testé (simulation) : OK.
 E1-5 est couvert. Les dégustations passent par une file **IndexedDB**
 (`src/lib/offline/`) + un endpoint de rejeu (`/api/checkins`) : interface
 optimiste, mise en file si le réseau manque, rejeu automatique au retour

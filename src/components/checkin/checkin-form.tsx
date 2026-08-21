@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { RatingTab } from "@/components/rating/rating-tab";
 import { FormatPicker } from "@/components/beer/format-picker";
@@ -24,6 +25,7 @@ export function CheckinForm({
   const router = useRouter();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [queued, setQueued] = useState(false);
   const [photo, setPhoto] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
 
@@ -77,9 +79,43 @@ export function CheckinForm({
 
     // Interface optimiste : la dégustation est acceptée localement, puis
     // synchronisée (immédiatement si réseau, plus tard sinon).
-    await submitCheckin(payload);
-    router.push(`/beer/${beerId}`);
-    router.refresh();
+    let synced = false;
+    try {
+      synced = await submitCheckin(payload);
+    } catch {
+      synced = false;
+    }
+
+    if (synced) {
+      // En ligne : la fiche (rendue côté serveur) va se recharger avec la note.
+      router.push(`/beer/${beerId}`);
+      router.refresh();
+    } else {
+      // Hors-ligne : on NE navigue PAS vers une page serveur (elle ne se
+      // chargerait pas). Confirmation sur place ; la synchro se fera au retour.
+      setQueued(true);
+      setBusy(false);
+    }
+  }
+
+  if (queued) {
+    return (
+      <div className="flex flex-col gap-4 px-5 pt-6">
+        <div className="rounded-2xl bg-alu-surface p-6 text-center">
+          <p className="display text-lg text-condensation">Dégustation enregistrée</p>
+          <p className="mt-2 text-sm text-alu-mat">
+            Pas de réseau pour l&apos;instant : elle se synchronisera toute seule dès que tu
+            seras reconnecté. Le bandeau en bas suit ce qui reste à envoyer.
+          </p>
+        </div>
+        <Link
+          href="/"
+          className="flex min-h-12 items-center justify-center rounded-lg border border-white/10 text-alu-brosse active:bg-white/5"
+        >
+          Retour au feed
+        </Link>
+      </div>
+    );
   }
 
   return (
