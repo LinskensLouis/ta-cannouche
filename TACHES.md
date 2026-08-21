@@ -12,7 +12,7 @@
 Next.js 15 (App Router), TypeScript strict, Tailwind, ESLint. Structure de dossiers conforme à `CLAUDE.md` §6.
 **Terminé quand :** `npm run dev` démarre, `tsc --noEmit` passe, le dépôt Git est initialisé avec un `.gitignore` correct.
 
-### S1-02 · Tokens de design — `à faire`
+### S1-02 · Tokens de design — `fait`
 Les six couleurs et les trois polices de `CLAUDE.md` §4.4 déclarées dans le bloc `@theme` de `src/app/globals.css` (Tailwind v4 n'utilise plus `tailwind.config.ts`) et chargées via `next/font`.
 **Terminé quand :** une page de démonstration affiche chaque token et chaque police, et aucune couleur n'est écrite en dur.
 

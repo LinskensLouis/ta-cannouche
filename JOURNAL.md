@@ -8,7 +8,7 @@
 ## État actuel
 
 **Sprint en cours :** 1 — Socle
-**Prochaine tâche :** S1-02 · Tokens de design
+**Prochaine tâche :** S1-03 · Projet Supabase et variables d'environnement
 **Projet démarrable :** oui — `npm install` puis `npm run dev`
 
 ---
@@ -42,6 +42,24 @@
 ---
 
 ## Sessions
+
+### 2026-08-21 — session 2
+
+- **Fait : S1-02 · Tokens de design — fait.**
+  - Six couleurs de §4.4 déclarées dans le bloc `@theme` de `globals.css` (`--color-alu-*`, `--color-serigraphie`, `--color-condensation`) → utilitaires `bg-*`, `text-*`.
+  - Trois polices via `next/font/google` : **Public Sans** (`font-sans`, défaut du body), **Archivo** (`font-display`) et **IBM Plex Mono** (`font-mono`, poids 400/500/600 car ce n'est pas une variable font).
+  - « Archivo Expanded » résolu : Archivo est une variable font, l'axe `wdth` est chargé (`axes: ['wdth']`) et la largeur maximale est appliquée par l'utilitaire `.display` (`font-stretch: 125%` + poids 700). Confirmé par inspection : le rendu est vraiment élargi, pas du gras.
+  - Fond sombre déclaré au navigateur : `themeColor: "#14171A"` + `colorScheme: "dark"` dans le `viewport`.
+  - Page de démo (`src/app/page.tsx`) affichant chaque couleur (pastille + hex + usage), chaque police et l'accent. Provisoire, remplacée à la coquille S1-08.
+  - Vérifié : `typecheck`, `lint`, `build` verts ; à 375 px rendu conforme, à 1024 px pas de scroll horizontal ni de casse.
+
+- **Décision :** rester sur **Next.js 16** (version stable la plus récente) plutôt que rétrograder en 15. `CLAUDE.md` §4.1 mis à jour en conséquence (Next 16 + Tailwind v4), dans un commit dédié.
+
+- **À vérifier sur un vrai téléphone :** le rendu d'Archivo élargi et la lisibilité de Public Sans / IBM Plex Mono en lumière basse (l'app s'ouvre surtout le soir). Rien de bloquant.
+
+- **Reste à faire :** S1-03. **Il me faut de ta part** : un projet Supabase en région EU + ses clés (`URL`, `anon`, `service_role`), et un dépôt distant GitHub.
+
+---
 
 ### 2026-08-21 — session 1
 

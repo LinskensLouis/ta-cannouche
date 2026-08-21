@@ -1,3 +1,28 @@
 @import "tailwindcss";
 
-/* Les tokens de design (couleurs et polices) arrivent en S1-02. */
+/* Tokens de design — CLAUDE.md §4.4. Tailwind v4 : tout passe par `@theme`,
+   plus de `tailwind.config.ts`. Aucune couleur ne doit être écrite en dur
+   ailleurs que dans ce bloc. */
+@theme {
+  /* Couleurs. `--color-<nom>` génère les utilitaires bg-<nom>, text-<nom>, etc. */
+  --color-alu-fond: #14171a; /* aluminium à l'ombre, fond général */
+  --color-alu-surface: #1e2227; /* cartes, feuilles remontantes */
+  --color-alu-brosse: #c9ced4; /* métal brossé, texte principal */
+  --color-alu-mat: #7c848c; /* texte secondaire, métadonnées */
+  --color-serigraphie: #f25c1f; /* orange imprimé — accent d'action, unique */
+  --color-condensation: #4fb3a5; /* états positifs, dispo, synchro réussie */
+
+  /* Polices — `--font-<nom>` génère l'utilitaire font-<nom>. Les variables
+     référencées sont injectées par next/font sur <html> (voir layout.tsx). */
+  --font-sans: var(--font-public-sans);
+  --font-display: var(--font-archivo);
+  --font-mono: var(--font-ibm-plex-mono);
+}
+
+/* La largeur « expanded » d'Archivo se pilote par l'axe `wdth`. 125 % est la
+   largeur maximale de la fonte : c'est le lettrage large sérigraphié de §3.5. */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-stretch: 125%;
+}
