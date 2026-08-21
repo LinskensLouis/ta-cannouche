@@ -69,15 +69,15 @@ Le parcours a créé une vraie **canette** « 1664 » 33 cl (via Open Food Facts
 laissée comme donnée d'aperçu. L'ancienne « 1664 » qui était en fait une
 **bouteille** a été supprimée. Supprime la canette aussi si tu veux une base vierge.
 
-### 🔴 File d'attente hors-ligne (S1-10) — non implémentée, c'est un Must
-E1-5 (enregistrer une dégustation sans réseau) est un **Must** du MVP et n'est
-**pas** encore là. Aujourd'hui l'enregistrement d'une dégustation passe par une
-action serveur **en ligne** (interface optimiste + revalidation) : sans réseau,
-l'enregistrement échoue. La couche IndexedDB (mise en file + rejeu au retour du
-réseau + indicateur de synchro) reste à construire — c'est le prochain gros
-morceau d'infra. Je l'ai laissée de côté volontairement plutôt que d'en livrer
-une version à moitié testable qui risquerait de perdre des données. **À faire
-avant diffusion au groupe**, ou à me redemander en priorité.
+### 🟢 File d'attente hors-ligne (S1-10) — faite
+E1-5 est couvert. Les dégustations passent par une file **IndexedDB**
+(`src/lib/offline/`) + un endpoint de rejeu (`/api/checkins`) : interface
+optimiste, mise en file si le réseau manque, rejeu automatique au retour
+(événement `online`), indicateur discret « X en attente de synchro ». Testé en
+simulant une panne réseau : dégustation mise en file → retour réseau → insérée
+sans action. **À revalider sur un vrai téléphone en mode avion** (le vrai test
+terrain). Note : seules les **dégustations** passent par la file ; les **achats**
+restent en ligne (moins critiques, on les saisit rarement sans réseau).
 
 ### 🟡 Photo de dégustation (S3-06) — reporté
 Nécessite un bucket Supabase Storage + compression canvas côté client à ~1200 px.

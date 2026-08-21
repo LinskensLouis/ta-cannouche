@@ -45,10 +45,9 @@ Barre de navigation basse fixe à 5 onglets — Feed · Recherche · **Scan** ·
 `manifest.json`, icônes, service worker, thème sombre déclaré.
 **Terminé quand :** l'app s'ajoute à l'écran d'accueil sur Android et sur iOS, et s'ouvre en plein écran sans barre de navigateur.
 
-### S1-10 · File d'attente hors-ligne — `reporté` → ouverture du sprint 3
+### S1-10 · File d'attente hors-ligne — `fait` (à revalider sur téléphone en mode avion)
 Couche de synchronisation en IndexedDB : les écritures sont mises en file quand le réseau est absent, rejouées au retour, avec un indicateur discret du nombre d'éléments en attente.
-**Terminé quand :** en mode avion, une écriture de test est acceptée puis synchronisée automatiquement au retour du réseau, sans action de ma part.
-**Décision (session 5) :** reporté juste avant S3-03, son premier consommateur réel. Au sprint 1 il n'existe aucune écriture métier à mettre en file ; la construire à vide donnerait une abstraction spéculative. À faire en générique dès S3-03, pas plus tard.
+**Fait :** `src/lib/offline/` (queue IndexedDB + synchro), endpoint `/api/checkins`, indicateur monté dans la coquille. Branché sur la dégustation (S3-03), interface optimiste. Testé en simulant une coupure réseau : mise en file → rejeu auto au retour. **Reste à revalider en vrai mode avion sur mobile.**
 
 ---
 
@@ -71,7 +70,7 @@ Couche de synchronisation en IndexedDB : les écritures sont mises en file quand
 
 - **S3-01** · `fait` · Composant languette : 5 languettes remplies au glissement, 0,5→5 par pas de 0,5, retour haptique (`navigator.vibrate`), tap/drag/clavier.
 - **S3-02** · `fait` · Formulaire de dégustation : note facultative, commentaire, format 4 boutons (pré-rempli), date, contexte.
-- **S3-03** · `fait` (en ligne) · Enregistrement via action serveur + revalidation. **File hors-ligne S1-10 non branchée** → voir A_TRAITER.
+- **S3-03** · `fait` · Enregistrement en interface optimiste, branché sur la file hors-ligne S1-10 (endpoint `/api/checkins`).
 - **S3-04** · `fait` · Historique personnel sur la fiche.
 - **S3-05** · `fait` · Note bayésienne (`m = 3`) dans `src/lib/beers/stats.ts`.
 - **S3-06** · `à faire` · Photo de dégustation + compression client. Reporté (nécessite un bucket Storage) → voir A_TRAITER.

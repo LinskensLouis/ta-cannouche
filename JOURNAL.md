@@ -7,8 +7,8 @@
 
 ## État actuel
 
-**Sprint en cours :** 4 terminé (cœur MVP en place) — reste S1-10 (hors-ligne) + S3-06 (photo)
-**Prochaine tâche :** S1-10 · File d'attente hors-ligne (Must, voir A_TRAITER)
+**Sprint en cours :** MVP (sprints 1→4) complet, tous les Must couverts. Reste S3-06 (photo, Should) + sprint 5 (post-MVP).
+**Prochaine tâche :** au choix de Louis — S3-06 (photo), sprint 5 (enseignes/social), ou tests terrain sur téléphone.
 **Projet démarrable :** oui — `npm install` puis `npm run dev`
 **Boucle MVP fonctionnelle :** scan/saisie code-barres → Open Food Facts → fiche →
 note languette → feed + historique + note du groupe ; achat → prix/L → stats,
@@ -79,8 +79,15 @@ graphique, classements. Testée de bout en bout dans le navigateur.
   + `@zxing/library` (scan iOS), `recharts` (graphiques).
 - **Migrations :** `001` schéma, `002` RLS, `003` trigger profil. Config auth
   poussée (`config push`) pour désactiver la confirmation d'email.
-- **Reste (voir A_TRAITER) :** S1-10 file hors-ligne (Must), S3-06 photo, scan
-  caméra + PWA à tester sur appareil, sprint 5 (enseignes/social) non entamé.
+- **S1-10 (file hors-ligne, Must) :** fait après coup. File IndexedDB
+  (`src/lib/offline/`) + endpoint `/api/checkins` + indicateur de synchro, branché
+  sur la dégustation. Testé en simulant une coupure réseau (mise en file → rejeu
+  auto au retour). À revalider en vrai mode avion sur mobile.
+- **Périmètre canettes renforcé :** filtre des bières en bouteille au scan
+  (packaging OFF), sur reprécision de Louis.
+- **Reste (voir A_TRAITER) :** S3-06 photo (Should), scan caméra + PWA + mode
+  avion à tester sur appareil, sprint 5 (enseignes/social) non entamé.
+- **Tous les Must du MVP (sprints 1→4) sont couverts.**
 
 - **S1-05 · Politiques RLS — fait.** `002_rls_policies.sql`. Groupe fermé : tout
   authentifié lit référentiel + activité ; écriture réservée au propriétaire ;
