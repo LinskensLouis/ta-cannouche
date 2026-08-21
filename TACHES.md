@@ -41,7 +41,7 @@ Inscription et connexion par email + mot de passe. Création automatique du `pro
 Barre de navigation basse fixe à 5 onglets — Feed · Recherche · **Scan** · Stats · Profil — avec le bouton scan en position centrale proéminente. Cinq pages vides. Gestion de `env(safe-area-inset-bottom)`.
 **Terminé quand :** la navigation est utilisable au pouce sur un vrai téléphone, ne passe pas sous la barre de gestes iOS, et toutes les cibles font au moins 48 px.
 
-### S1-09 · PWA installable — `à faire`
+### S1-09 · PWA installable — `fait`
 `manifest.json`, icônes, service worker, thème sombre déclaré.
 **Terminé quand :** l'app s'ajoute à l'écran d'accueil sur Android et sur iOS, et s'ouvre en plein écran sans barre de navigateur.
 

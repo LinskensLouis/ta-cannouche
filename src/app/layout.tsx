@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Archivo, Public_Sans, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
+import { RegisterServiceWorker } from "@/components/pwa/register-sw";
 
 // Display — CLAUDE.md §4.4 demande « Archivo Expanded ». Sur Google Fonts, ce
 // n'est pas une famille distincte : c'est la variable font Archivo avec un axe
@@ -31,6 +32,22 @@ const ibmPlexMono = IBM_Plex_Mono({
 export const metadata: Metadata = {
   title: "Ta Cannouche",
   description: "Carnet de dégustation de canettes, suivi de budget et repérage en rayon.",
+  manifest: "/manifest.webmanifest",
+  applicationName: "Ta Cannouche",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "Cannouche",
+  },
+  icons: {
+    icon: "/icons/icon-192.png",
+    apple: "/icons/apple-touch-icon.png",
+  },
+  other: {
+    // iOS lit encore cette balise historique pour ouvrir la PWA en plein écran ;
+    // Next ne génère que la version standardisée `mobile-web-app-capable`.
+    "apple-mobile-web-app-capable": "yes",
+  },
 };
 
 export const viewport: Viewport = {
@@ -52,6 +69,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-alu-fond text-alu-brosse font-sans">
         {children}
+        <RegisterServiceWorker />
       </body>
     </html>
   );

@@ -37,6 +37,14 @@ qu'on n'envoie pas d'emails (confirmation off), mais **à mettre à jour avec l'
 Vercel** au moment du déploiement (sinon liens de reset de mot de passe / OAuth
 casseront). Ligne à changer puis `npx supabase config push`.
 
+### 🔵 PWA — installation à vérifier sur appareil (S1-09)
+Manifeste, icônes (motif languette), service worker et balises iOS sont en place
+et servis (vérifié en local). L'**installation réelle** (ajout à l'écran d'accueil,
+ouverture plein écran sans barre de navigateur) ne se teste que sur un appareil
+via HTTPS — donc **après déploiement Vercel**, sur ton iPhone et un Android.
+Le service worker n'est enregistré qu'en **production** (il gênerait le hot-reload
+en dev).
+
 ### 🟡 Utilisateur de test à supprimer
 Un compte `louis.ui.test@example.invalid` a été créé pour tester l'UI d'auth et
 laissé connecté dans le navigateur de preview afin de visualiser les pages
