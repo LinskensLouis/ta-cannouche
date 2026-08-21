@@ -16,6 +16,14 @@
 
 <!-- Les entrées sont ajoutées au fil de la session, plus récentes en bas. -->
 
+### 🔵 Activer Analytics + Speed Insights côté Vercel
+Le code est en place (`<Analytics />` + `<SpeedInsights />` dans le layout), mais
+il faut **activer** les deux dans le dashboard Vercel pour voir les données :
+- Projet → onglet **Analytics** → *Enable Web Analytics*
+- Projet → onglet **Speed Insights** → *Enable*
+Gratuit sur le plan Hobby (avec des limites). Sans activation, les composants ne
+collectent rien (pas d'erreur, juste pas de data).
+
 ### 🟢 GitHub + Vercel — faits
 Dépôt poussé sur https://github.com/LinskensLouis/ta-cannouche (le README
 auto-généré par GitHub a été fusionné en gardant le nôtre). Déployé sur
