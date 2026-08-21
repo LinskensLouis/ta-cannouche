@@ -21,7 +21,7 @@ Création du projet, récupération des clés, mise en place de `.env.local` et 
 **Terminé quand :** une requête de test aboutit depuis l'app, et aucune clé n'est présente dans un fichier suivi par Git.
 **Point de vigilance :** la clé `service_role` ne sort jamais du serveur.
 
-### S1-04 · Migration initiale du schéma — `à faire`
+### S1-04 · Migration initiale du schéma — `fait`
 Toutes les tables de `SPECS.md` §4.3 : `profiles`, `breweries`, `beers`, `checkins`, `purchases`, `stores`, `beer_availability`, `lists`, `list_items`. Enums `format_ml`, `context`, `source`. Index d'unicité sur `barcode`.
 **Terminé quand :** la migration s'applique sans erreur sur une base vierge, et les contraintes (montants entiers, `rating` nullable, `format_ml` contraint) sont vérifiables par un test d'insertion.
 

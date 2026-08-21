@@ -8,15 +8,11 @@
 ## État actuel
 
 **Sprint en cours :** 1 — Socle
-**Prochaine tâche :** S1-04 · Migration initiale du schéma
+**Prochaine tâche :** S1-05 · Politiques RLS
 **Projet démarrable :** oui — `npm install` puis `npm run dev`
 
-> ⏳ **À faire par Louis avant S1-04** (commandes interactives, dans un terminal PowerShell à la racine) :
-> ```
-> npx supabase login
-> npx supabase link --project-ref cctxlrnuvrgjpemujode
-> ```
-> Le `link` demande le mot de passe de la base (celui noté à la création du projet).
+> ✅ `supabase login` + `link` faits (project ref `cctxlrnuvrgjpemujode`). Le mot de
+> passe base est en cache CLI : `npx supabase db push` fonctionne sans re-saisie.
 
 ---
 
@@ -49,6 +45,24 @@
 ---
 
 ## Sessions
+
+### 2026-08-21 — session 4
+
+- **Fait : S1-04 · Migration initiale du schéma — fait.**
+  - `supabase/migrations/001_init_schema.sql` : 9 tables (`profiles`, `breweries`, `beers`, `stores`, `purchases`, `checkins`, `beer_availability`, `lists`, `list_items`) + 4 enums (`format_ml`, `checkin_context`, `beer_source`, `expenses_visibility`).
+  - Contraintes : montants `integer` centimes avec `CHECK (>= 0)` ; `rating numeric(2,1)` nullable avec `CHECK` (0,5→5,0, pas de 0,5) ; `abv` bornée 0–100 ; `format_ml` NOT NULL et contraint par enum ; unicité `barcode`, plus index unique partiel `(lower(name), brewery_id, format_ml)` quand `barcode` nul.
+  - `expenses_visibility` sur `profiles`, défaut `private` (décision « dépenses réglables, privé par défaut »). Servira à la RLS des `purchases` en S1-05.
+  - **RLS activée sur les 9 tables** dès cette migration (aucune politique = tout refusé). Politiques en S1-05.
+  - FK à la suppression : lignes possédées (`checkins`, `purchases`, profil, listes) en cascade ; `beers.created_by` et `brewery_id` passent à `NULL` ; `beer_id` des achats/dégustations en `restrict` (on ne supprime pas une bière encore consommée).
+  - **Appliquée** sur la base distante via `npx supabase db push` (mot de passe en cache). `migration list` : `001` local = `001` distant.
+  - **Contraintes prouvées** par une page serveur temporaire (clé service_role, contourne la RLS) : `format_ml` hors enum → `22P02` refusé ; montant négatif → `23514` refusé ; `rating = 3.3` → `23514` refusé ; `rating = null` et `4.5` acceptés. Jeu de test créé puis supprimé ; base re-vérifiée vierge (0 ligne). Page retirée.
+  - Vérifié : `typecheck`, `lint`, `build` verts.
+
+- **Note de réconciliation :** CLAUDE.md §4.2 impose « RLS dès la 1re migration » alors que TACHES sépare S1-04 (schéma) et S1-05 (politiques). Résolu en activant la RLS ici (fermé par défaut) et en réservant les politiques à S1-05.
+
+- **À vérifier :** rien sur téléphone.
+
+---
 
 ### 2026-08-21 — session 3
 
