@@ -11,12 +11,19 @@ export function Scanner() {
   const controllerRef = useRef<ScanController | null>(null);
   const [status, setStatus] = useState<Status>("idle");
   const [manual, setManual] = useState("");
+  const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
 
   const resolve = (code: string) => {
+    setError("");
     setStatus("resolving");
     startTransition(async () => {
-      await lookupBarcodeAction(code);
+      const res = await lookupBarcodeAction(code);
+      // En cas de succès, l'action redirige (on n'arrive pas ici).
+      if (res?.error) {
+        setError(res.error);
+        setStatus("idle");
+      }
     });
   };
 
@@ -83,6 +90,7 @@ export function Scanner() {
         }}
         className="flex flex-col gap-2"
       >
+        {error && <p className="text-sm text-serigraphie">{error}</p>}
         <label className="text-sm text-alu-mat">Ou saisis le code-barres</label>
         <div className="flex gap-2">
           <input

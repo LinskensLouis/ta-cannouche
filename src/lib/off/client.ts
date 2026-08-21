@@ -53,6 +53,8 @@ type OffApiProduct = {
   image_url?: string;
   quantity?: string;
   categories_tags?: string[];
+  packaging_tags?: string[];
+  packagings?: { shape?: { id?: string } | string }[];
   nutriments?: { alcohol_100g?: number; alcohol_value?: number };
 };
 
@@ -61,11 +63,32 @@ function isBeer(tags: string[] | undefined): boolean {
   return tags.some((t) => t.includes("beer") || t === "en:beers");
 }
 
-// Récupère une bière depuis OFF par code-barres. Retourne :
-//   - un OffBeer si le produit existe ET est une bière ;
-//   - null si le code est inconnu d'OFF ou n'est pas une bière.
-export async function fetchOffBeer(barcode: string): Promise<OffBeer | null> {
-  const fields = "product_name,brands,image_front_url,image_url,quantity,categories_tags,nutriments";
+// Périmètre : canettes uniquement (CLAUDE.md §3). On rejette une bière SEULEMENT
+// si son conditionnement est explicitement une bouteille et jamais une canette.
+// L'inconnu passe (bénéfice du doute) : beaucoup de canettes ont un
+// conditionnement mal renseigné dans OFF, et le format reste borné aux 4 canettes.
+export function isExplicitBottle(product: OffApiProduct): boolean {
+  const signals = [
+    ...(product.packaging_tags ?? []),
+    ...(product.packagings ?? []).map((p) =>
+      typeof p.shape === "string" ? p.shape : (p.shape?.id ?? ""),
+    ),
+  ].map((s) => s.toLowerCase());
+
+  const hasCan = signals.some((s) => s.includes("can") || s.includes("canette"));
+  const hasBottle = signals.some((s) => s.includes("bottle") || s.includes("bouteille"));
+  return hasBottle && !hasCan;
+}
+
+export type OffLookup =
+  | { status: "can"; beer: OffBeer }
+  | { status: "bottle" } // bière trouvée mais en bouteille → hors périmètre
+  | { status: "absent" }; // inconnue d'OFF ou pas une bière
+
+// Récupère une bière canette depuis OFF par code-barres.
+export async function fetchOffBeer(barcode: string): Promise<OffLookup> {
+  const fields =
+    "product_name,brands,image_front_url,image_url,quantity,categories_tags,packaging_tags,packagings,nutriments";
   const url = `https://world.openfoodfacts.org/api/v2/product/${encodeURIComponent(barcode)}.json?fields=${fields}`;
 
   let json: { status?: number; product?: OffApiProduct };
@@ -75,29 +98,35 @@ export async function fetchOffBeer(barcode: string): Promise<OffBeer | null> {
       // Cache court : une fiche produit OFF bouge peu.
       next: { revalidate: 60 * 60 * 24 },
     });
-    if (!res.ok) return null;
+    if (!res.ok) return { status: "absent" };
     json = await res.json();
   } catch {
-    return null;
+    return { status: "absent" };
   }
 
-  if (json.status !== 1 || !json.product) return null;
+  if (json.status !== 1 || !json.product) return { status: "absent" };
   const p = json.product;
-  if (!isBeer(p.categories_tags)) return null;
+  if (!isBeer(p.categories_tags)) return { status: "absent" };
 
   const name = p.product_name?.trim();
-  if (!name) return null;
+  if (!name) return { status: "absent" };
+
+  // Canettes uniquement : on écarte les bouteilles.
+  if (isExplicitBottle(p)) return { status: "bottle" };
 
   const abvRaw = p.nutriments?.alcohol_100g ?? p.nutriments?.alcohol_value;
   const abv = typeof abvRaw === "number" && abvRaw > 0 && abvRaw <= 100 ? abvRaw : null;
 
   return {
-    barcode,
-    name,
-    brand: p.brands?.split(",")[0]?.trim() || null,
-    imageUrl: p.image_front_url || p.image_url || null,
-    abv,
-    formatMl: parseFormatMl(p.quantity),
-    offId: barcode,
+    status: "can",
+    beer: {
+      barcode,
+      name,
+      brand: p.brands?.split(",")[0]?.trim() || null,
+      imageUrl: p.image_front_url || p.image_url || null,
+      abv,
+      formatMl: parseFormatMl(p.quantity),
+      offId: barcode,
+    },
   };
 }

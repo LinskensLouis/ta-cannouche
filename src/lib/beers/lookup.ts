@@ -7,6 +7,7 @@ import type { FormatMl } from "@/types/db";
 // Résolution d'un code-barres vers une bière (S2-03 / S2-05).
 export type Resolution =
   | { kind: "beer"; id: string }
+  | { kind: "bottle" } // hors périmètre : canettes uniquement
   | {
       kind: "manual";
       prefill: {
@@ -33,24 +34,27 @@ export async function resolveBeerByBarcode(barcode: string): Promise<Resolution>
     .maybeSingle();
   if (existing) return { kind: "beer", id: existing.id };
 
-  const off = await fetchOffBeer(barcode);
+  const lookup = await fetchOffBeer(barcode);
 
-  if (off && off.formatMl) {
-    const beer = await createBeer({
-      barcode: off.barcode,
-      name: off.name,
-      brand: off.brand,
-      abv: off.abv,
-      formatMl: off.formatMl,
-      style: null,
-      imageUrl: off.imageUrl,
-      source: "openfoodfacts",
-      offId: off.offId,
-    });
-    if (beer) return { kind: "beer", id: beer.id };
-  }
+  // Bière en bouteille → refus explicite (canettes uniquement).
+  if (lookup.status === "bottle") return { kind: "bottle" };
 
-  if (off) {
+  if (lookup.status === "can") {
+    const off = lookup.beer;
+    if (off.formatMl) {
+      const beer = await createBeer({
+        barcode: off.barcode,
+        name: off.name,
+        brand: off.brand,
+        abv: off.abv,
+        formatMl: off.formatMl,
+        style: null,
+        imageUrl: off.imageUrl,
+        source: "openfoodfacts",
+        offId: off.offId,
+      });
+      if (beer) return { kind: "beer", id: beer.id };
+    }
     return {
       kind: "manual",
       prefill: {

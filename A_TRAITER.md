@@ -53,10 +53,21 @@ bout (code → Open Food Facts → fiche créée). **À vérifier sur ton iPhone
 (risque n°1 du projet) : ouverture caméra, lecture d'un vrai code-barres,
 temps < 3 s jusqu'à la fiche.
 
+### 🟢 Périmètre canettes : filtre bouteilles ajouté (ta reprécision)
+À ta demande (canettes uniquement, pas les bouteilles), l'intégration Open Food
+Facts **rejette désormais les bières explicitement en bouteille** (via
+`packaging_tags` : `en:bottle` / `en:bouteille` sans marqueur canette). Le scan
+d'une bouteille affiche « cette bière est vendue en bouteille — Ta Cannouche ne
+référence que les canettes ». Testé : bouteille 1664 rejetée, canette 1664 acceptée.
+**Limite assumée :** une bière au conditionnement **non renseigné** dans OFF passe
+(bénéfice du doute — sinon on rejetterait trop de vraies canettes mal taguées), et
+le format reste borné aux 4 tailles de canette. Le formulaire manuel ne propose
+aussi que des formats canette. À voir si tu veux durcir (rejeter aussi l'inconnu).
+
 ### 🟡 Donnée de test laissée en base
-Le parcours de scan a créé une vraie bière « 1664 » (via Open Food Facts) qui
-reste en base — c'est une vraie canette, utile comme donnée d'aperçu. Supprime-la
-si tu veux repartir d'une base vierge.
+Le parcours a créé une vraie **canette** « 1664 » 33 cl (via Open Food Facts),
+laissée comme donnée d'aperçu. L'ancienne « 1664 » qui était en fait une
+**bouteille** a été supprimée. Supprime la canette aussi si tu veux une base vierge.
 
 ### 🔴 File d'attente hors-ligne (S1-10) — non implémentée, c'est un Must
 E1-5 (enregistrer une dégustation sans réseau) est un **Must** du MVP et n'est
