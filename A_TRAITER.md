@@ -45,6 +45,19 @@ via HTTPS — donc **après déploiement Vercel**, sur ton iPhone et un Android.
 Le service worker n'est enregistré qu'en **production** (il gênerait le hot-reload
 en dev).
 
+### 🔵 Scan caméra — à tester sur appareil (S2-01/02)
+Le scan par caméra (`BarcodeDetector` natif Android + repli `@zxing/browser`
+iOS) est codé mais **non testable ici** (pas de caméra dans l'environnement).
+La **saisie manuelle** du code-barres, elle, est testée et fonctionne de bout en
+bout (code → Open Food Facts → fiche créée). **À vérifier sur ton iPhone**
+(risque n°1 du projet) : ouverture caméra, lecture d'un vrai code-barres,
+temps < 3 s jusqu'à la fiche.
+
+### 🟡 Donnée de test laissée en base
+Le parcours de scan a créé une vraie bière « 1664 » (via Open Food Facts) qui
+reste en base — c'est une vraie canette, utile comme donnée d'aperçu. Supprime-la
+si tu veux repartir d'une base vierge.
+
 ### 🟡 Utilisateur de test à supprimer
 Un compte `louis.ui.test@example.invalid` a été créé pour tester l'UI d'auth et
 laissé connecté dans le navigateur de preview afin de visualiser les pages

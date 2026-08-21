@@ -1,0 +1,74 @@
+import Image from "next/image";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+import { getBeerRating } from "@/lib/beers/stats";
+import { formatMlLabel } from "@/lib/format";
+
+// Fiche bière (S2-04) : visuel, nom, brasserie, format, degré, note du groupe.
+export default async function BeerPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  const supabase = await createClient();
+
+  const { data: beer } = await supabase
+    .from("beers")
+    .select("*, breweries(name)")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (!beer) notFound();
+
+  const rating = await getBeerRating(id);
+  const brewery = beer.breweries?.name ?? null;
+
+  return (
+    <div className="flex flex-col gap-5 px-5 pt-6">
+      <div className="flex gap-4">
+        <div className="relative size-28 shrink-0 overflow-hidden rounded-xl bg-alu-surface">
+          {beer.image_url ? (
+            <Image src={beer.image_url} alt={beer.name} fill className="object-contain" sizes="112px" />
+          ) : (
+            <div className="flex h-full items-center justify-center text-alu-mat">🍺</div>
+          )}
+        </div>
+        <div className="flex flex-col justify-center gap-1">
+          <h1 className="display text-2xl leading-tight">{beer.name}</h1>
+          {brewery && <p className="text-sm text-alu-mat">{brewery}</p>}
+          <p className="font-mono text-xs text-alu-mat">
+            {formatMlLabel(beer.format_ml)}
+            {beer.abv != null && ` · ${beer.abv.toString().replace(".", ",")}°`}
+            {beer.style && ` · ${beer.style}`}
+          </p>
+        </div>
+      </div>
+
+      {/* Note du groupe */}
+      <div className="flex items-center gap-4 rounded-xl bg-alu-surface p-4">
+        {rating.bayesian != null ? (
+          <>
+            <span className="font-mono text-3xl text-serigraphie">
+              {rating.bayesian.toFixed(1).replace(".", ",")}
+            </span>
+            <span className="text-sm text-alu-mat">
+              note du groupe
+              <br />
+              <span className="font-mono text-xs">
+                {rating.count} dégustation{rating.count > 1 ? "s" : ""} notée{rating.count > 1 ? "s" : ""}
+              </span>
+            </span>
+          </>
+        ) : (
+          <span className="text-sm text-alu-mat">Personne ne l&apos;a encore notée. À toi de jouer.</span>
+        )}
+      </div>
+
+      {/* Action primaire */}
+      <Link
+        href={`/beer/${id}/noter`}
+        className="flex min-h-12 items-center justify-center rounded-lg bg-serigraphie px-4 font-semibold text-alu-fond"
+      >
+        Enregistrer une dégustation
+      </Link>
+    </div>
+  );
+}

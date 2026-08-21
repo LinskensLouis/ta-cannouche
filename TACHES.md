@@ -45,22 +45,22 @@ Barre de navigation basse fixe à 5 onglets — Feed · Recherche · **Scan** ·
 `manifest.json`, icônes, service worker, thème sombre déclaré.
 **Terminé quand :** l'app s'ajoute à l'écran d'accueil sur Android et sur iOS, et s'ouvre en plein écran sans barre de navigateur.
 
-### S1-10 · File d'attente hors-ligne — `à faire`
+### S1-10 · File d'attente hors-ligne — `reporté` → ouverture du sprint 3
 Couche de synchronisation en IndexedDB : les écritures sont mises en file quand le réseau est absent, rejouées au retour, avec un indicateur discret du nombre d'éléments en attente.
 **Terminé quand :** en mode avion, une écriture de test est acceptée puis synchronisée automatiquement au retour du réseau, sans action de ma part.
-**Point de vigilance :** à construire maintenant, en générique, pas à rétro-adapter au sprint 3.
+**Décision (session 5) :** reporté juste avant S3-03, son premier consommateur réel. Au sprint 1 il n'existe aucune écriture métier à mettre en file ; la construire à vide donnerait une abstraction spéculative. À faire en générique dès S3-03, pas plus tard.
 
 ---
 
 ## Sprint 2 — Scan et référentiel
 **Objectif de fin de sprint :** je scanne une canette et sa fiche s'affiche.
 
-- **S2-01** · Abstraction de scan : `BarcodeDetector` natif sur Android, repli sur `@zxing/library` pour Safari iOS. **À tester sur un vrai iPhone avant de passer à la suite.**
-- **S2-02** · Écran de scan : caméra plein écran, cadre de visée, gestion du refus de permission avec lien vers la saisie manuelle.
-- **S2-03** · Intégration Open Food Facts : appel par code-barres, filtre sur `en:beers`, mapping des champs vers `beers`, mise en cache locale.
-- **S2-04** · Fiche bière : visuel, nom, brasserie, format, degré, note moyenne du groupe.
-- **S2-05** · Code inconnu d'OFF : bascule automatique vers un formulaire de création pré-rempli avec le code-barres.
-- **S2-06** · Recherche par nom dans le référentiel local.
+- **S2-01** · `fait` (caméra à tester sur appareil) · Abstraction de scan : `BarcodeDetector` natif, repli `@zxing/browser` iOS (`src/lib/scan/detector.ts`).
+- **S2-02** · `fait` (caméra à tester sur appareil) · Écran de scan : caméra + cadre de visée, refus de permission géré, saisie manuelle en filet.
+- **S2-03** · `fait` · Intégration Open Food Facts (`src/lib/off/client.ts`), filtre bière, mapping, format déduit. Testé sur données réelles.
+- **S2-04** · `fait` · Fiche bière : visuel, nom, brasserie, format, degré, note du groupe (bayésienne).
+- **S2-05** · `fait` · Code inconnu / format incertain → formulaire de création pré-rempli.
+- **S2-06** · `fait` · Recherche par nom dans le référentiel.
 
 **Critère d'acceptation du sprint :** moins de 3 secondes entre l'ouverture de la caméra et l'affichage de la fiche, en conditions normales.
 

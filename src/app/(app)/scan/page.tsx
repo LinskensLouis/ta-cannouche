@@ -1,14 +1,14 @@
-import { ScreenHeader, EmptyState } from "@/components/layout/screen";
+import { ScreenHeader } from "@/components/layout/screen";
+import { Scanner } from "./scanner";
 
-// Écran de scan du code-barres (S2-01 / S2-02).
+// Écran de scan (S2-01 / S2-02) : caméra plein cadre, cadre de visée, et
+// saisie manuelle en filet de sécurité (permission refusée ou appareil sans
+// caméra). Une fois le code lu, on résout vers la fiche ou la création.
 export default function ScanPage() {
   return (
     <>
       <ScreenHeader title="Scanner" subtitle="Vise le code-barres d'une canette." />
-      <EmptyState
-        title="La caméra arrive bientôt"
-        hint="Le scan du code-barres est la première tâche du sprint 2."
-      />
+      <Scanner />
     </>
   );
 }
