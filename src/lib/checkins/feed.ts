@@ -7,7 +7,7 @@ export async function getGroupFeed(limit = 30): Promise<CheckinRowData[]> {
   const supabase = await createClient();
   const { data } = await supabase
     .from("checkins")
-    .select("id, rating, comment, consumed_at, beer_id, profiles(pseudo), beers(name)")
+    .select("id, rating, comment, consumed_at, photo_url, beer_id, profiles(pseudo), beers(name)")
     .order("consumed_at", { ascending: false })
     .limit(limit);
 
@@ -16,6 +16,7 @@ export async function getGroupFeed(limit = 30): Promise<CheckinRowData[]> {
     rating: c.rating,
     comment: c.comment,
     consumed_at: c.consumed_at,
+    photo_url: c.photo_url,
     beerId: c.beer_id,
     pseudo: c.profiles?.pseudo ?? undefined,
     beerName: c.beers?.name ?? undefined,

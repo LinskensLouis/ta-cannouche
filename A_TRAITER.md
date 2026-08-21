@@ -79,9 +79,17 @@ sans action. **À revalider sur un vrai téléphone en mode avion** (le vrai tes
 terrain). Note : seules les **dégustations** passent par la file ; les **achats**
 restent en ligne (moins critiques, on les saisit rarement sans réseau).
 
-### 🟡 Photo de dégustation (S3-06) — reporté
-Nécessite un bucket Supabase Storage + compression canvas côté client à ~1200 px.
-Pas bloquant pour la boucle note. À faire quand tu voudras les photos.
+### 🟢 Photo de dégustation (S3-06) — faite
+Bucket Storage `checkin-photos` (public en lecture, écriture réservée au dossier
+`<user_id>/` de chacun), compression client à ~1200 px avant upload, affichage
+dans le feed et l'historique. **Deux limites à connaître :**
+- 🟠 **Bucket public** : n'importe qui avec l'URL d'une photo peut la voir (pas
+  d'énumération, mais URL devinable = non). Acceptable pour un groupe fermé ; si
+  tu veux resserrer, passer en bucket privé + URLs signées.
+- 🟠 **Photo non mise en file hors-ligne** : contrairement à la dégustation
+  elle-même, l'upload de la photo exige le réseau. Sans réseau, la dégustation est
+  enregistrée **sans** la photo (message affiché). Mettre l'image en file
+  IndexedDB serait faisable mais alourdit ; à voir selon l'usage réel.
 
 ### 🟡 Utilisateur de test à supprimer
 Un compte `louis.ui.test@example.invalid` a été créé pour tester l'UI d'auth et

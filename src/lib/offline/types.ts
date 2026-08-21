@@ -9,6 +9,7 @@ export type CheckinPayload = {
   quantity_ml: number;
   context: CheckinContext | null;
   consumed_at: string; // ISO
+  photo_url: string | null;
 };
 
 export const FORMATS: FormatMl[] = ["250", "330", "440", "500"];

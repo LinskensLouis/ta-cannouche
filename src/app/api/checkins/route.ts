@@ -34,6 +34,7 @@ export async function POST(request: Request) {
       ? (b.context as CheckinContext)
       : null;
   const consumedAt = typeof b.consumed_at === "string" ? b.consumed_at : new Date().toISOString();
+  const photoUrl = typeof b.photo_url === "string" && b.photo_url ? b.photo_url : null;
 
   const { error } = await supabase.from("checkins").insert({
     user_id: user.id,
@@ -43,6 +44,7 @@ export async function POST(request: Request) {
     quantity_ml: quantityMl,
     context,
     consumed_at: consumedAt,
+    photo_url: photoUrl,
   });
   if (error) return NextResponse.json({ error: error.message }, { status: 400 });
 

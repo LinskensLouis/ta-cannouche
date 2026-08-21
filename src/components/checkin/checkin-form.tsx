@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { RatingTab } from "@/components/rating/rating-tab";
 import { FormatPicker } from "@/components/beer/format-picker";
 import { CONTEXTS, CONTEXT_LABELS } from "@/lib/i18n/labels";
 import { submitCheckin } from "@/lib/offline/sync";
 import { FORMATS, type CheckinPayload } from "@/lib/offline/types";
+import { compressImage } from "@/lib/photo/compress";
+import { uploadCheckinPhoto } from "@/lib/photo/upload";
 import type { CheckinContext, FormatMl } from "@/types/db";
 
 export function CheckinForm({
@@ -21,6 +24,17 @@ export function CheckinForm({
   const router = useRouter();
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+
+  function onPickPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0] ?? null;
+    setPhoto(file);
+    setPreview((old) => {
+      if (old) URL.revokeObjectURL(old);
+      return file ? URL.createObjectURL(file) : null;
+    });
+  }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -36,6 +50,21 @@ export function CheckinForm({
     const contextRaw = String(form.get("context") ?? "");
     const dateRaw = String(form.get("consumed_at") ?? "").trim();
 
+    setBusy(true);
+
+    // Photo : compression client à ~1200 px puis upload. Best-effort — si l'upload
+    // échoue (hors-ligne), on enregistre quand même la dégustation sans photo.
+    let photoUrl: string | null = null;
+    if (photo) {
+      try {
+        const compressed = await compressImage(photo);
+        photoUrl = await uploadCheckinPhoto(compressed);
+        if (!photoUrl) setError("Photo non envoyée (réseau ?), dégustation enregistrée sans.");
+      } catch {
+        setError("Photo illisible, dégustation enregistrée sans.");
+      }
+    }
+
     const payload: CheckinPayload = {
       beer_id: beerId,
       rating: ratingRaw ? Number(ratingRaw) : null,
@@ -43,9 +72,9 @@ export function CheckinForm({
       quantity_ml: Number(format),
       context: CONTEXTS.includes(contextRaw as CheckinContext) ? (contextRaw as CheckinContext) : null,
       consumed_at: dateRaw ? new Date(dateRaw).toISOString() : new Date().toISOString(),
+      photo_url: photoUrl,
     };
 
-    setBusy(true);
     // Interface optimiste : la dégustation est acceptée localement, puis
     // synchronisée (immédiatement si réseau, plus tard sinon).
     await submitCheckin(payload);
@@ -98,6 +127,26 @@ export function CheckinForm({
           className="rounded-lg bg-alu-surface px-4 py-3 text-base outline-none focus-visible:ring-2 focus-visible:ring-serigraphie"
         />
       </label>
+
+      {/* Photo (facultative) : compressée à ~1200 px avant upload */}
+      <div className="flex flex-col gap-2">
+        <span className="text-sm text-alu-mat">Photo</span>
+        <label className="flex min-h-12 cursor-pointer items-center justify-center rounded-lg border border-dashed border-white/15 px-4 text-sm text-alu-mat active:bg-white/5">
+          {photo ? "Changer la photo" : "Ajouter une photo de la canette"}
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            onChange={onPickPhoto}
+            className="sr-only"
+          />
+        </label>
+        {preview && (
+          <div className="relative h-48 w-full overflow-hidden rounded-lg bg-alu-surface">
+            <Image src={preview} alt="Aperçu" fill unoptimized className="object-cover" />
+          </div>
+        )}
+      </div>
 
       {error && <p className="text-sm text-serigraphie">{error}</p>}
 

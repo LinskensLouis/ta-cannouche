@@ -29,7 +29,7 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
   const { data: history } = user
     ? await supabase
         .from("checkins")
-        .select("id, rating, comment, consumed_at")
+        .select("id, rating, comment, consumed_at, photo_url")
         .eq("beer_id", id)
         .eq("user_id", user.id)
         .order("consumed_at", { ascending: false })

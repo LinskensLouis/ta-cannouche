@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { formatDate } from "@/lib/format";
 
@@ -6,6 +7,7 @@ export type CheckinRowData = {
   rating: number | null;
   comment: string | null;
   consumed_at: string;
+  photo_url?: string | null;
   pseudo?: string; // affiché dans le feed de groupe
   beerName?: string; // affiché dans le feed
   beerId?: string;
@@ -36,6 +38,17 @@ export function CheckinRow({ checkin }: { checkin: CheckinRowData }) {
           </span>
         )}
         {checkin.comment && <p className="text-sm text-alu-brosse">{checkin.comment}</p>}
+        {checkin.photo_url && (
+          <div className="relative mt-1 h-40 w-full overflow-hidden rounded-lg bg-alu-fond">
+            <Image
+              src={checkin.photo_url}
+              alt="Photo de la dégustation"
+              fill
+              className="object-cover"
+              sizes="(max-width: 520px) 100vw, 520px"
+            />
+          </div>
+        )}
         <span className="font-mono text-xs text-alu-mat">{formatDate(checkin.consumed_at)}</span>
       </div>
     </div>

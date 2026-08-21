@@ -73,7 +73,7 @@ Couche de synchronisation en IndexedDB : les écritures sont mises en file quand
 - **S3-03** · `fait` · Enregistrement en interface optimiste, branché sur la file hors-ligne S1-10 (endpoint `/api/checkins`).
 - **S3-04** · `fait` · Historique personnel sur la fiche.
 - **S3-05** · `fait` · Note bayésienne (`m = 3`) dans `src/lib/beers/stats.ts`.
-- **S3-06** · `à faire` · Photo de dégustation + compression client. Reporté (nécessite un bucket Storage) → voir A_TRAITER.
+- **S3-06** · `fait` · Photo de dégustation : bucket Storage `checkin-photos` (migration `004`), compression client à ~1200 px (`src/lib/photo/`), upload dans le dossier de l'utilisateur, affichage dans le feed et l'historique. Testé (upload autorisé/refusé selon dossier, URL publique, rendu).
 
 **Critère d'acceptation du sprint :** le parcours « scan → note → enregistré » tient en moins de 15 secondes et 3 taps.
 
