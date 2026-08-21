@@ -16,12 +16,28 @@ export function Scanner() {
 
   const resolve = (code: string) => {
     setError("");
+
+    // Retrouver une canette (base du groupe + Open Food Facts) demande le réseau.
+    // Le code a bien été lu localement, mais on ne peut pas le résoudre hors-ligne.
+    if (typeof navigator !== "undefined" && !navigator.onLine) {
+      setError(
+        "Code-barres lu ✓ — mais retrouver ou ajouter la canette demande une connexion. Réessaie une fois reconnecté.",
+      );
+      setStatus("idle");
+      return;
+    }
+
     setStatus("resolving");
     startTransition(async () => {
-      const res = await lookupBarcodeAction(code);
-      // En cas de succès, l'action redirige (on n'arrive pas ici).
-      if (res?.error) {
-        setError(res.error);
+      try {
+        const res = await lookupBarcodeAction(code);
+        // En cas de succès, l'action redirige (on n'arrive pas ici).
+        if (res?.error) {
+          setError(res.error);
+          setStatus("idle");
+        }
+      } catch {
+        setError("Recherche impossible (réseau ?). Réessaie une fois connecté.");
         setStatus("idle");
       }
     });

@@ -72,6 +72,17 @@ Le parcours a créé une vraie **canette** « 1664 » 33 cl (via Open Food Facts
 laissée comme donnée d'aperçu. L'ancienne « 1664 » qui était en fait une
 **bouteille** a été supprimée. Supprime la canette aussi si tu veux une base vierge.
 
+### 🟠 Ajout de bière hors-ligne — décision : reporté (décidé avec Louis)
+Sans réseau, le **scan lit bien le code-barres** (local), mais **retrouver ou créer
+la canette demande une connexion** (base du groupe + Open Food Facts). Décision :
+on **ne construit pas** la création de bière hors-ligne maintenant (ça exigerait
+de mettre bière + dégustation en file avec identifiants temporaires et réconciliation
+au retour, plus la gestion des doublons). À la place, un **message clair** s'affiche
+hors-ligne. À réévaluer selon l'usage réel du groupe : si le cas « zéro réseau +
+canette inconnue » gêne vraiment, on fera la file complète.
+Rappel connexe : navigation limitée hors-ligne (pages rendues côté serveur ;
+seul le feed « / » est mis en cache par le service worker).
+
 ### 🟢 File d'attente hors-ligne (S1-10) — faite + corrigée
 **Correctif (test terrain Loulou) :** en vrai mode avion, l'app redirigeait après
 enregistrement vers la fiche bière (rendue côté serveur) qui ne peut pas se
