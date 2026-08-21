@@ -33,7 +33,7 @@ RLS activée sur **toutes** les tables. Règles : chacun lit les données du gro
 `supabase gen types typescript` branché sur un script npm, sortie dans `src/types/database.ts`.
 **Terminé quand :** les types sont importés et utilisés dans le client, et la commande de régénération est documentée dans `JOURNAL.md`.
 
-### S1-07 · Authentification — `à faire`
+### S1-07 · Authentification — `fait`
 Inscription et connexion par email + mot de passe. Création automatique du `profile` (pseudo, avatar) à l'inscription, via trigger Postgres. Écrans de connexion et d'inscription au design mobile.
 **Terminé quand :** je crée un compte depuis mon téléphone, je me reconnecte, et le profil existe en base.
 
