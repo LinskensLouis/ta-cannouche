@@ -25,7 +25,7 @@ Création du projet, récupération des clés, mise en place de `.env.local` et 
 Toutes les tables de `SPECS.md` §4.3 : `profiles`, `breweries`, `beers`, `checkins`, `purchases`, `stores`, `beer_availability`, `lists`, `list_items`. Enums `format_ml`, `context`, `source`. Index d'unicité sur `barcode`.
 **Terminé quand :** la migration s'applique sans erreur sur une base vierge, et les contraintes (montants entiers, `rating` nullable, `format_ml` contraint) sont vérifiables par un test d'insertion.
 
-### S1-05 · Politiques RLS — `à faire`
+### S1-05 · Politiques RLS — `fait`
 RLS activée sur **toutes** les tables. Règles : chacun lit les données du groupe, chacun n'écrit et ne modifie que ses propres `checkins`, `purchases` et son profil. Le référentiel `beers` est en lecture pour tous, en écriture pour les membres authentifiés.
 **Terminé quand :** un test prouve qu'un utilisateur A ne peut ni modifier ni supprimer un `checkin` de l'utilisateur B.
 
