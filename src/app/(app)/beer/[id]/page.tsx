@@ -86,7 +86,7 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
               note du groupe
               <br />
               <span className="font-mono text-xs">
-                {rating.count} dégustation{rating.count > 1 ? "s" : ""} notée{rating.count > 1 ? "s" : ""}
+                noté par {rating.count} personne{rating.count > 1 ? "s" : ""}
               </span>
             </span>
           </>

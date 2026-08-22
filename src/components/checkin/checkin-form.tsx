@@ -31,11 +31,13 @@ export function CheckinForm({
   defaultFormat,
   today,
   edit,
+  defaultRating = 0,
 }: {
   beerId: string;
   defaultFormat: FormatMl;
   today: string;
   edit?: CheckinEditData;
+  defaultRating?: number; // note actuelle de l'utilisateur, pré-remplie en création
 }) {
   const router = useRouter();
   const [error, setError] = useState("");
@@ -154,8 +156,13 @@ export function CheckinForm({
 
   return (
     <form onSubmit={onSubmit} className="flex flex-col gap-6 px-5 pb-6">
-      <div className="rounded-2xl bg-alu-surface p-5">
-        <RatingTab defaultValue={edit?.rating ?? 0} />
+      <div className="flex flex-col gap-2 rounded-2xl bg-alu-surface p-5">
+        <RatingTab defaultValue={edit?.rating ?? defaultRating} />
+        {!edit && defaultRating > 0 && (
+          <p className="text-center text-xs text-alu-mat">
+            Ta note actuelle est pré-remplie — garde-la ou modifie-la.
+          </p>
+        )}
       </div>
 
       <div className="flex flex-col gap-2">
