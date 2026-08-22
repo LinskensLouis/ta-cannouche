@@ -9,7 +9,7 @@ export type TrendingBeer = {
   name: string;
   image_url: string | null;
   format_ml: FormatMl;
-  rating: number | null; // bayésienne
+  rating: number | null; // moyenne brute (ce que le groupe attend d'une note)
 };
 
 export async function getTrendingBeers(limit = 12): Promise<TrendingBeer[]> {
@@ -32,11 +32,11 @@ export async function getTrendingBeers(limit = 12): Promise<TrendingBeer[]> {
 
   const [beersRes, statsRes] = await Promise.all([
     supabase.from("beers").select("id, name, image_url, format_ml").in("id", orderedIds),
-    supabase.from("beer_stats").select("beer_id, bayesian_rating").in("beer_id", orderedIds),
+    supabase.from("beer_stats").select("beer_id, avg_rating").in("beer_id", orderedIds),
   ]);
 
   const beers = new Map((beersRes.data ?? []).map((b) => [b.id, b]));
-  const ratings = new Map((statsRes.data ?? []).map((s) => [s.beer_id, s.bayesian_rating]));
+  const ratings = new Map((statsRes.data ?? []).map((s) => [s.beer_id, s.avg_rating]));
 
   return orderedIds
     .map((id) => {

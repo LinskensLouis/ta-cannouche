@@ -77,10 +77,10 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
 
       {/* Note du groupe */}
       <div className="flex items-center gap-4 rounded-xl bg-alu-surface p-4">
-        {rating.bayesian != null ? (
+        {rating.average != null ? (
           <>
             <span className="font-mono text-3xl text-serigraphie">
-              {rating.bayesian.toFixed(1).replace(".", ",")}
+              {rating.average.toFixed(1).replace(".", ",")}
             </span>
             <span className="text-sm text-alu-mat">
               note du groupe
