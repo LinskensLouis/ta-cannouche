@@ -44,40 +44,33 @@
 
 ---
 
-## Performance — optimisations à prévoir (audit build mobile, 2026-08-22)
+## Performance — optimisations (audit build mobile, 2026-08-22)
 
-> Audit fait sur le build (je n'ai pas accès au dashboard Speed Insights). À
-> l'échelle actuelle (peu de données, 2 comptes) l'app est déjà rapide : ces
-> points sont surtout **préventifs** pour la fluidité mobile et la montée en
-> charge. Priorité décroissante. Rien n'est encore fait — à arbitrer.
+> Audit fait sur le build. À l'échelle actuelle l'app était déjà rapide ; les
+> gains ci-dessous préparent surtout la montée en charge et la fluidité mobile.
 
-**Fort impact (fluidité perçue)**
-- 🟠 **Proxy : `getUser()` → `getClaims()`.** Le proxy valide la session à
-  *chaque* navigation via un aller-retour réseau vers Supabase Auth (`getUser()`).
-  `getClaims()` valide le JWT **localement** (signature) sans round-trip → chaque
-  changement d'écran plus rapide. C'est probablement le gain le plus net.
-  (À valider : dispo dans `@supabase/ssr` 0.12, projet sur les nouvelles clés.)
-- 🟠 **Agrégations en vues Postgres** (prévues SPECS §4.4). Aujourd'hui la note de
-  groupe (`getBeerRating`), la tier list et les classements **rapatrient tous les
-  checkins et recalculent en JS** à chaque affichage → coût qui grossit
-  linéairement avec les données. Remplacer par des vues SQL (`beer_stats`, etc.)
-  ou des agrégations `count/avg` côté base.
+**Fait (2026-08-22)**
+- ✅ **Proxy `getUser()` → `getClaims()`** : plus d'aller-retour réseau vers
+  l'Auth Supabase à chaque navigation, vérification locale du JWT. Toutes les
+  redirections d'auth testées.
+  ⚠️ *Effet de bord assumé* : un compte supprimé garde une session valide jusqu'à
+  expiration du jeton (~1 h), car on ne revérifie plus l'existence côté serveur à
+  chaque requête. Sans impact réel pour le groupe.
+- ✅ **Vues d'agrégation Postgres** (`beer_stats`, `user_stats`,
+  `user_daily_consumption`, migration 005) : note de groupe, tier list et stats
+  membres calculées en SQL au lieu de scans complets recalculés en JS.
+- ✅ **Lazy-load du graphique Recharts** (`next/dynamic`, hors bundle initial de /stats).
+- ✅ **Polices allégées** : IBM Plex Mono réduit aux graisses 400/600 (378 → 346 Ko).
+- ✅ **Fiche bière** : requêtes note/historique/achats en parallèle + `getClaims`.
 
-**Impact moyen (poids téléchargé)**
-- 🟠 **Polices : 378 Ko** dont ~172 Ko pour Archivo (axe de largeur variable).
-  Pistes : figer la largeur « expanded » en instance statique plutôt que l'axe
-  variable complet ; réduire IBM Plex Mono à 1-2 graisses ; `preload` de la seule
-  police d'affichage. Gros levier sur le LCP mobile.
-- 🟡 **Lazy-load du graphique Recharts** (338 Ko) via `next/dynamic` (`ssr:false`) :
-  déjà isolé à l'écran Stats, mais on peut le différer pour alléger son 1er rendu.
-
-**Petit impact / à surveiller**
-- 🟡 **Fiche bière : requêtes séquentielles** (bière, note[2 req], historique,
-  achats) → paralléliser (`Promise.all`) ; `getBeerRating` fait 2 requêtes à la
-  suite dont un scan global.
-- 🔵 Client Supabase (254 Ko) : inhérent, peu d'action.
-- 🔵 Envisager un `revalidate` court / cache-tags sur le feed pour éviter des
-  refetch redondants entre navigations.
+**Reste (à arbitrer plus tard)**
+- 🟠 **Archivo (axe de largeur ~172 Ko)** : c'est la signature visuelle (lettrage
+  large). Non touché volontairement — le couper allégerait le LCP mobile mais
+  changerait le look. À décider si le poids pose vraiment problème à l'usage.
+- 🔵 **Cache/`revalidate` court sur le feed** pour éviter des refetch redondants
+  entre navigations. À envisager si le feed devient lourd.
+- 🔵 Si les données explosent : passer `beer_stats` en **vue matérialisée**
+  (la moyenne globale bayésienne rescanne les checkins à chaque calcul).
 
 ---
 
