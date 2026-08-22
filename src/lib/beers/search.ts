@@ -6,6 +6,25 @@ import type { BeerCardData } from "@/components/beer/beer-card";
 // souvent absente du nom auto-rempli par OFF) et par style. Insensible à la casse.
 const SELECT = "id, name, format_ml, image_url, breweries(name)";
 
+// Catalogue parcourable : les canettes du référentiel, plus récentes d'abord,
+// pour noter sans avoir à scanner (Tranche A du P1).
+export async function listCatalog(limit = 50): Promise<BeerCardData[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from("beers")
+    .select(SELECT)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  return (data ?? []).map((b) => ({
+    id: b.id,
+    name: b.name,
+    format_ml: b.format_ml,
+    image_url: b.image_url,
+    brewery: b.breweries?.name ?? null,
+  }));
+}
+
 export async function searchBeers(query: string, limit = 30): Promise<BeerCardData[]> {
   const q = query.trim();
   if (q.length < 2) return [];
