@@ -11,10 +11,10 @@ enfin le confort. Les retours du groupe pointent tous vers la saisie facile → 
 
 1. ~~**P1 — Saisie sans friction**~~ ✅ **fait** : catalogue parcourable, ajout
    manuel d'une canette absente, et case « déjà goûtée avant » (hors feed).
-2. **P2 — Vie sociale (quick wins)** ← *prochain* : avis du groupe sur la fiche bière, home
-   « bières du moment ».
-3. **P3 — Différenciateurs (specs)** : disponibilité en enseigne (E6), évolution
-   des prix.
+2. ~~**P2 — Vie sociale (quick wins)**~~ ✅ **fait** : avis du groupe sur la fiche,
+   home « bières du moment ».
+3. **P3 — Différenciateurs (specs)** ← *prochain* : disponibilité en enseigne (E6),
+   évolution des prix.
 4. **P4 — Social & profil** : stats des potes, avatar/édition de profil, réactions,
    suivre des membres.
 5. **P5 — Engagement** : roulette, événements, badges, Wrapped.
@@ -38,14 +38,11 @@ enfin le confort. Les retours du groupe pointent tous vers la saisie facile → 
   évolution de la note moyenne donnée.
 
 ## Social (sprint 5)
-- **Avis du groupe sur la fiche bière** *(retour groupe)* : afficher les
-  commentaires/avis des autres membres sur une canette, pas seulement la note
-  moyenne. Owen : « quand tu cliques dessus tu vois les avis des gens ». Option de
-  tri (récents, ou membres les plus suivis). Gap actuel : la fiche ne montre que
-  ma propre historique + la moyenne.
-- **Home découverte « bières du moment »** *(retour groupe)* : une page d'accueil
-  qui met en avant les canettes tendance / récentes avec la note du groupe, en
-  complément du feed d'activité.
+- ~~**Avis du groupe sur la fiche bière**~~ ✅ **fait** : section « Avis du groupe »
+  (commentaires des autres membres, note + photo + date). Reste possible : tri par
+  membres les plus suivis quand il y aura un système de suivi.
+- ~~**Home découverte « bières du moment »**~~ ✅ **fait** : rangée des canettes du
+  moment sur l'accueil, au-dessus de l'activité récente.
 - **Voir et comparer les stats de ses potes** *(retour groupe)* : consulter le
   profil et les stats des autres membres (« tu vois les stats de tes potes et les
   tiennes »). Suppose des profils consultables.
