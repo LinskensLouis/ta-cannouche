@@ -74,6 +74,11 @@ enfin le confort. Les retours du groupe pointent tous vers la saisie facile → 
 - ~~**Distinction log récent / déjà goûté avant**~~ ✅ **fait** : case « Je l'avais
   déjà goûtée avant » → comptée dans notes/collection/totaux, exclue du feed et du
   graphique de conso.
+- ~~**Fusion des doublons (admin)**~~ ✅ **fait** : écran `/admin/doublons` réservé
+  aux admins pour fusionner deux fiches d'une même canette.
+- **Prévention des doublons à la création** : quand on ajoute/scanne une canette,
+  suggérer les fiches existantes proches (nom/marque) pour éviter d'en recréer une
+  déjà présente (ex. « 8.6 cherry » vs « 86 Cherry »). Complète la fusion, en amont.
 - **Liste « à ne pas racheter »** *(retour groupe)* : marquer une canette goûtée
   qu'on ne veut pas reprendre (avec photo), pour s'en souvenir en rayon (ex. « 86
   black »). Peut se faire via une note basse + une liste système « à éviter ».
