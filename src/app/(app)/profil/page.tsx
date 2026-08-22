@@ -13,9 +13,15 @@ export default async function ProfilPage() {
   } = await supabase.auth.getUser();
 
   let pseudo = "";
+  let isAdmin = false;
   if (user) {
-    const { data } = await supabase.from("profiles").select("pseudo").eq("id", user.id).maybeSingle();
+    const { data } = await supabase
+      .from("profiles")
+      .select("pseudo, is_admin")
+      .eq("id", user.id)
+      .maybeSingle();
     pseudo = data?.pseudo ?? "";
+    isAdmin = data?.is_admin ?? false;
   }
 
   const collected = user ? await getCollectedBeers(user.id) : [];
@@ -62,6 +68,15 @@ export default async function ProfilPage() {
             </div>
           )}
         </div>
+
+        {isAdmin && (
+          <Link
+            href="/admin/doublons"
+            className="flex min-h-12 items-center justify-center rounded-lg border border-white/10 px-4 text-base text-alu-brosse active:bg-white/5"
+          >
+            Gérer les doublons
+          </Link>
+        )}
 
         <form action={signOutAction} className="pt-2">
           <button

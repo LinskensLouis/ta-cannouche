@@ -365,6 +365,7 @@ export type Database = {
           created_at: string
           expenses_visibility: Database["public"]["Enums"]["expenses_visibility"]
           id: string
+          is_admin: boolean
           pseudo: string
         }
         Insert: {
@@ -372,6 +373,7 @@ export type Database = {
           created_at?: string
           expenses_visibility?: Database["public"]["Enums"]["expenses_visibility"]
           id: string
+          is_admin?: boolean
           pseudo: string
         }
         Update: {
@@ -379,6 +381,7 @@ export type Database = {
           created_at?: string
           expenses_visibility?: Database["public"]["Enums"]["expenses_visibility"]
           id?: string
+          is_admin?: boolean
           pseudo?: string
         }
         Relationships: []
@@ -543,7 +546,7 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       beer_source: "openfoodfacts" | "manual"
