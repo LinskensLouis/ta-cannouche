@@ -3,7 +3,9 @@ import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/types/database";
 
 // Rafraîchit la session Supabase à chaque requête et protège les routes.
-// @supabase/ssr impose ce passage en middleware pour renouveler les jetons.
+// Perf : on valide le jeton avec `getClaims()` (vérification locale de la
+// signature JWT via les clés asymétriques du projet), au lieu de `getUser()`
+// qui fait un aller-retour réseau vers l'Auth Supabase à chaque navigation.
 export async function updateSession(request: NextRequest) {
   let response = NextResponse.next({ request });
 
@@ -26,22 +28,24 @@ export async function updateSession(request: NextRequest) {
     },
   });
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // `getClaims()` renvoie les claims du JWT (dont `sub`) si la session est
+  // valide, sinon `data` est null. La vérification est locale (pas de round-trip),
+  // et le rafraîchissement du jeton reste assuré via la récupération de session.
+  const { data } = await supabase.auth.getClaims();
+  const isAuthed = !!data?.claims;
 
   const path = request.nextUrl.pathname;
   const isAuthRoute = path === "/login" || path === "/signup";
 
   // Non connecté hors des écrans d'auth → redirige vers la connexion.
-  if (!user && !isAuthRoute) {
+  if (!isAuthed && !isAuthRoute) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
     return NextResponse.redirect(redirectUrl);
   }
 
   // Déjà connecté sur un écran d'auth → renvoie vers l'app.
-  if (user && isAuthRoute) {
+  if (isAuthed && isAuthRoute) {
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/";
     return NextResponse.redirect(redirectUrl);
