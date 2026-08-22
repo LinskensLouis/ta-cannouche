@@ -10,6 +10,7 @@ export type CheckinPayload = {
   context: CheckinContext | null;
   consumed_at: string; // ISO
   photo_url: string | null;
+  retroactive: boolean; // true = déjà goûtée avant, hors feed d'activité récente
 };
 
 export const FORMATS: FormatMl[] = ["250", "330", "440", "500"];

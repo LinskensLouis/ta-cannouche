@@ -23,6 +23,7 @@ export type CheckinEditData = {
   context: CheckinContext | null;
   consumed_at: string; // ISO
   photo_url: string | null;
+  retroactive: boolean;
 };
 
 export function CheckinForm({
@@ -97,6 +98,7 @@ export function CheckinForm({
       context: CONTEXTS.includes(contextRaw as CheckinContext) ? (contextRaw as CheckinContext) : null,
       consumed_at: dateRaw ? new Date(dateRaw).toISOString() : new Date().toISOString(),
       photo_url: photoUrl,
+      retroactive: form.get("retroactive") === "on",
     };
 
     // Édition : mise à jour en ligne, puis retour à la fiche.
@@ -190,6 +192,22 @@ export function CheckinForm({
           max={today}
           className="min-h-12 rounded-lg bg-alu-surface px-4 font-mono text-base outline-none focus-visible:ring-2 focus-visible:ring-serigraphie"
         />
+      </label>
+
+      {/* Rétroactif : compte dans les notes/collection mais pas dans le feed. */}
+      <label className="flex min-h-12 cursor-pointer items-center gap-3 rounded-lg bg-alu-surface p-3">
+        <input
+          type="checkbox"
+          name="retroactive"
+          defaultChecked={edit?.retroactive ?? false}
+          className="size-5 shrink-0 accent-serigraphie"
+        />
+        <span className="flex flex-col">
+          <span className="text-sm text-alu-brosse">Je l&apos;avais déjà goûtée avant</span>
+          <span className="text-xs text-alu-mat">
+            Comptée dans tes notes et ta collection, mais pas affichée dans le feed.
+          </span>
+        </span>
       </label>
 
       <label className="flex flex-col gap-2">

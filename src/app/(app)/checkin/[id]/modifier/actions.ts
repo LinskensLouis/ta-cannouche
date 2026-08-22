@@ -14,6 +14,7 @@ export type CheckinEdit = {
   context: CheckinContext | null;
   consumed_at: string;
   photo_url: string | null;
+  retroactive: boolean;
 };
 
 // Modifie une dégustation existante. La RLS garantit qu'on ne touche que les
@@ -36,6 +37,7 @@ export async function updateCheckinAction(id: string, data: CheckinEdit): Promis
       context,
       consumed_at: data.consumed_at,
       photo_url: data.photo_url,
+      retroactive: data.retroactive,
     })
     .eq("id", id)
     .eq("user_id", user.id);

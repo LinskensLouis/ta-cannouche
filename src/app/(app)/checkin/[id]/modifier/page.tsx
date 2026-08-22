@@ -21,7 +21,7 @@ export default async function ModifierCheckinPage({
 
   const { data: checkin } = await supabase
     .from("checkins")
-    .select("id, user_id, beer_id, rating, comment, quantity_ml, context, consumed_at, photo_url, beers(name, format_ml)")
+    .select("id, user_id, beer_id, rating, comment, quantity_ml, context, consumed_at, photo_url, retroactive, beers(name, format_ml)")
     .eq("id", id)
     .maybeSingle();
 
@@ -47,6 +47,7 @@ export default async function ModifierCheckinPage({
           context: checkin.context,
           consumed_at: checkin.consumed_at,
           photo_url: checkin.photo_url,
+          retroactive: checkin.retroactive,
         }}
       />
 

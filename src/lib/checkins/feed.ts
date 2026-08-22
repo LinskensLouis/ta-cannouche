@@ -8,6 +8,7 @@ export async function getGroupFeed(limit = 30): Promise<CheckinRowData[]> {
   const { data } = await supabase
     .from("checkins")
     .select("id, rating, comment, consumed_at, photo_url, beer_id, profiles(pseudo), beers(name)")
+    .eq("retroactive", false) // les dégustations rétroactives ne sont pas de l'activité récente
     .order("consumed_at", { ascending: false })
     .limit(limit);
 

@@ -205,6 +205,7 @@ export type Database = {
           purchase_id: string | null
           quantity_ml: number | null
           rating: number | null
+          retroactive: boolean
           user_id: string
         }
         Insert: {
@@ -218,6 +219,7 @@ export type Database = {
           purchase_id?: string | null
           quantity_ml?: number | null
           rating?: number | null
+          retroactive?: boolean
           user_id: string
         }
         Update: {
@@ -231,6 +233,7 @@ export type Database = {
           purchase_id?: string | null
           quantity_ml?: number | null
           rating?: number | null
+          retroactive?: boolean
           user_id?: string
         }
         Relationships: [
