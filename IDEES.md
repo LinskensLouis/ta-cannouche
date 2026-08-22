@@ -41,6 +41,14 @@
   par volume — plus sain (décision ouverte des specs).
 - **Recommandations** basées sur les goûts (E5-6).
 
+## Référentiel & recherche
+- **Ajout de canettes déjà goûtées, sans scan** : saisie rétroactive pour
+  enregistrer les bières bues par le passé (le formulaire manuel existe déjà, mais
+  le rendre facile d'accès depuis la recherche / une entrée « ajouter à la main »).
+- **Tags de style pour la recherche** : filtrer/chercher par type (blonde, brune,
+  lager, IPA, triple…). Suppose de normaliser le champ `style` (liste de tags
+  plutôt que texte libre) et de l'exposer dans la barre de recherche.
+
 ## Données & confort
 - **Évolution du prix d'une canette** : graphique du prix (au litre) dans le temps,
   à partir des achats et des signalements en enseigne — repérer les hausses,
