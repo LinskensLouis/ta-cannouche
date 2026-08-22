@@ -1,6 +1,28 @@
 import "server-only";
 import { createClient } from "@/lib/supabase/server";
 
+type SupaClient = Awaited<ReturnType<typeof createClient>>;
+
+// Alimente la disponibilité en enseigne (E6) sans saisie supplémentaire : un
+// achat avec enseigne vaut « vue à [enseigne] à [prix unitaire] ». Upsert sur
+// (beer_id, store_id) pour rafraîchir prix et date au dernier achat constaté.
+export async function upsertAvailability(
+  supabase: SupaClient,
+  input: { beerId: string; storeId: string; priceCents: number; seenAt: string; reportedBy: string },
+): Promise<void> {
+  await supabase.from("beer_availability").upsert(
+    {
+      beer_id: input.beerId,
+      store_id: input.storeId,
+      reported_by: input.reportedBy,
+      price_cents: input.priceCents,
+      last_seen_at: input.seenAt,
+      in_stock: true,
+    },
+    { onConflict: "beer_id,store_id" },
+  );
+}
+
 // Trouve une enseigne par nom (insensible à la casse) ou la crée.
 export async function findOrCreateStore(name: string | null): Promise<string | null> {
   const clean = name?.trim();
@@ -46,5 +68,18 @@ export async function createPurchase(input: NewPurchase): Promise<boolean> {
     pack_count: input.packCount,
     purchased_at: input.purchasedAt,
   });
-  return !error;
+  if (error) return false;
+
+  // Alimente la dispo en enseigne à partir de l'achat (prix unitaire).
+  if (storeId) {
+    const units = input.packSize * input.packCount;
+    await upsertAvailability(supabase, {
+      beerId: input.beerId,
+      storeId,
+      priceCents: Math.round(input.totalPriceCents / units),
+      seenAt: input.purchasedAt,
+      reportedBy: user.id,
+    });
+  }
+  return true;
 }
