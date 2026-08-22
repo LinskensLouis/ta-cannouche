@@ -9,9 +9,9 @@ Logique : d'abord ce qui **remplit la base** (sans données, rien ne vit), puis 
 qui rend l'app **vivante socialement** (rétention), puis les **différenciateurs**,
 enfin le confort. Les retours du groupe pointent tous vers la saisie facile → P1.
 
-1. **P1 — Saisie sans friction** : noter depuis le catalogue sans scanner +
-   distinction log récent / déjà goûté. *Le plus urgent : conditionne toute la data.*
-2. **P2 — Vie sociale (quick wins)** : avis du groupe sur la fiche bière, home
+1. ~~**P1 — Saisie sans friction**~~ ✅ **fait** : catalogue parcourable, ajout
+   manuel d'une canette absente, et case « déjà goûtée avant » (hors feed).
+2. **P2 — Vie sociale (quick wins)** ← *prochain* : avis du groupe sur la fiche bière, home
    « bières du moment ».
 3. **P3 — Différenciateurs (specs)** : disponibilité en enseigne (E6), évolution
    des prix.
@@ -71,17 +71,12 @@ enfin le confort. Les retours du groupe pointent tous vers la saisie facile → 
 - **Recommandations** basées sur les goûts (E5-6).
 
 ## Référentiel & recherche
-- **Noter direct depuis le catalogue, sans scanner** *(retour groupe, très demandé)* :
-  parcourir la base partagée et poser une note + un avis directement, façon
-  Letterboxd (« tout est déjà genré, tu notes direct »). Le formulaire manuel et la
-  recherche existent ; il manque le parcours « je choisis dans la liste et je note »
-  sans passer par le scan. C'est le levier n°1 pour remplir la base (« ajoutez ce
-  que vous prenez pour faire de la data »).
-- **Distinction log récent / déjà goûté avant** *(retour groupe)* : un log frais
-  apparaît dans le feed (« tes potes voient que tu viens de la boire »), un ajout
-  **rétroactif** (goûté il y a longtemps) est enregistré **sans** polluer l'activité
-  récente. Idée reprise de Letterboxd. Suppose un flag « rétroactif » sur la
-  dégustation, filtré dans le feed.
+- ~~**Noter direct depuis le catalogue, sans scanner**~~ ✅ **fait** : catalogue
+  parcourable dans l'onglet Recherche + bouton « Ajouter une canette à la main »
+  pour les canettes absentes (goûtées avant l'appli).
+- ~~**Distinction log récent / déjà goûté avant**~~ ✅ **fait** : case « Je l'avais
+  déjà goûtée avant » → comptée dans notes/collection/totaux, exclue du feed et du
+  graphique de conso.
 - **Liste « à ne pas racheter »** *(retour groupe)* : marquer une canette goûtée
   qu'on ne veut pas reprendre (avec photo), pour s'en souvenir en rayon (ex. « 86
   black »). Peut se faire via une note basse + une liste système « à éviter ».

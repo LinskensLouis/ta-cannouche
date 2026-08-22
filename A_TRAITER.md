@@ -78,8 +78,8 @@
 
 MVP complet (sprints 1→4) + tier list du groupe + recherche par marque et
 instantanée + Vercel Analytics/Speed Insights. Détail par tâche dans `TACHES.md`,
-historique dans `JOURNAL.md`. Base réelle : comptes **Loulou** + **Jules**
-(le groupe a commencé à l'utiliser).
+historique dans `JOURNAL.md`. Base réelle : **6 comptes** (le groupe l'utilise
+activement — plusieurs canettes notées : NATZ, 86 Cherry, Maison Canaille…).
 
 Points connexes déjà réglés : GitHub + Vercel en prod, `site_url` calé sur la
 prod, filtre bouteilles, file d'attente hors-ligne (+ correctif mode avion),
