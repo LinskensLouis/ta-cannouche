@@ -7,13 +7,18 @@
 
 ## Actions restantes (de ton côté, pas de code)
 
-- 🟠 **Couper l'inscription publique quand tout le groupe est inscrit.** L'app est
-  ouverte : n'importe qui avec le lien peut créer un compte. Un `noindex` limite
-  la découverte (fait), mais pour verrouiller vraiment, une fois tous les potes
-  dedans : dans `supabase/config.toml`, passer `[auth] enable_signup = false` **et**
-  `[auth.email] enable_signup = false`, puis `npx supabase config push`. Pour
-  ajouter quelqu'un ensuite : le recréer côté dashboard, ou rouvrir temporairement.
-  Dis-moi quand vous êtes au complet et je le fais.
+- 🟠 **À concevoir : la notion de « groupe » dans l'app** (décision Louis, 2026-08-23).
+  Plutôt que de simplement couper l'inscription, on veut un vrai socle social :
+  **inviter des gens, appartenir à un ou des groupes, feed/classements limités au
+  groupe**. Gros chantier structurant (table `groups` + `group_members`, refonte
+  de la RLS de presque toutes les tables pour filtrer par groupe, écran
+  d'invitation par lien). **À NE PAS implémenter tout de suite** : Louis veut
+  d'abord qu'on étudie *comment* le faire (modèle de données, migration d'une base
+  déjà remplie, impact RLS) avant de coder. Voir aussi IDEES → « Groupes privés »
+  et « Invitation par lien ».
+  - *En attendant*, l'app reste **ouverte** (n'importe qui avec le lien crée un
+    compte). Repli rapide si besoin de verrouiller avant : `enable_signup = false`
+    dans `supabase/config.toml` + `npx supabase config push`.
 
 - 🟢 **Analytics + Speed Insights** activés dans Vercel (fait par Louis). Données
   visibles dans les onglets dédiés ; me les partager (capture/chiffres) pour analyse.

@@ -6,6 +6,7 @@ import { getBeerRating } from "@/lib/beers/stats";
 import { formatMlLabel, displayBrewery } from "@/lib/format";
 import { CheckinRow } from "@/components/checkin/checkin-row";
 import { PurchaseRow } from "@/components/purchase/purchase-row";
+import { getGroupReviews } from "@/lib/checkins/reviews";
 
 // Fiche bière (S2-04) : visuel, nom, brasserie, format, degré, note du groupe.
 export default async function BeerPage({ params }: { params: Promise<{ id: string }> }) {
@@ -26,9 +27,10 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
   const { data: claims } = await supabase.auth.getClaims();
   const userId = claims?.claims?.sub ?? null;
 
-  // Note du groupe + mon historique + mes achats, en parallèle.
-  const [rating, historyRes, purchasesRes] = await Promise.all([
+  // Note du groupe + avis du groupe + mon historique + mes achats, en parallèle.
+  const [rating, reviews, historyRes, purchasesRes] = await Promise.all([
     getBeerRating(id),
+    getGroupReviews(id, userId),
     userId
       ? supabase
           .from("checkins")
@@ -105,6 +107,16 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
           Enregistrer un achat
         </Link>
       </div>
+
+      {/* Avis du groupe : ce que les autres membres en pensent */}
+      {reviews.length > 0 && (
+        <section className="flex flex-col gap-2">
+          <h2 className="display text-base text-alu-mat">Avis du groupe</h2>
+          {reviews.map((c) => (
+            <CheckinRow key={c.id} checkin={c} />
+          ))}
+        </section>
+      )}
 
       {/* Mon historique sur cette canette (chaque ligne est modifiable) */}
       {history && history.length > 0 && (
