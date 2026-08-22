@@ -62,8 +62,7 @@ enfin le confort. Les retours du groupe pointent tous vers la saisie facile → 
   ✅ **fait** (E6-2, E6-3).
 - **Signalement manuel** « vue ici à X € » sans achat (E6-1), et **rupture** (E6-4).
 - **Filtre « près de moi »** (E6-5) : nécessite lat/lng des enseignes + géoloc.
-- **Backfill** : générer la dispo à partir des achats déjà enregistrés (les
-  anciens achats ne l'ont pas alimentée, seuls les nouveaux le font).
+- ~~**Backfill** : générer la dispo à partir des achats déjà enregistrés~~ ✅ **fait**.
 
 ## Classements & stats
 - **Filtrer les classements par style** (meilleure IPA, etc.) (E5-5).

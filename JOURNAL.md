@@ -7,16 +7,30 @@
 
 ## État actuel
 
-**Sprint en cours :** MVP (sprints 1→4) complet, tous les Must couverts. Reste S3-06 (photo, Should) + sprint 5 (post-MVP).
-**Prochaine tâche :** au choix de Louis — S3-06 (photo), sprint 5 (enseignes/social), ou tests terrain sur téléphone.
-**Projet démarrable :** oui — `npm install` puis `npm run dev`
-**Boucle MVP fonctionnelle :** scan/saisie code-barres → Open Food Facts → fiche →
-note languette → feed + historique + note du groupe ; achat → prix/L → stats,
-graphique, classements. Testée de bout en bout dans le navigateur.
+**En prod, utilisé par le groupe (6 comptes réels).** MVP + nombreux ajouts post-lancement.
+**Prochaine tâche (au choix) :** compléter E6 (signalement manuel « vue ici », rupture),
+évolution des prix, ou **étude de la notion de groupe** (invitations — à concevoir avant
+de coder, voir A_TRAITER). Sinon : pause pour laisser vivre l'app.
+**Projet démarrable :** oui — `npm install` puis `npm run dev`.
 
-> 👉 **Au retour, lis `A_TRAITER.md` en premier** : GitHub à pousser, file
-> hors-ligne (Must) à finir, photo à faire, scan caméra + PWA à tester sur ton
-> iPhone, et 2 données/comptes de test à nettoyer.
+> 👉 **Au retour, lis `A_TRAITER.md` et `IDEES.md`** : décisions, priorités et
+> points ouverts y sont à jour.
+
+### 2026-08-23 — session (perf + retours groupe)
+- **Perf** : proxy `getClaims` (plus d'aller-retour Auth par nav), vues d'agrégation
+  Postgres (`beer_stats`, `user_stats`, `user_daily_consumption`), lazy-load Recharts,
+  polices allégées, fiche parallélisée.
+- **P1 saisie sans friction** : catalogue parcourable, **ajout manuel** d'une canette
+  absente, case **« déjà goûtée avant »** (hors feed).
+- **P2 social** : **avis du groupe** sur la fiche, home **« bières du moment »**.
+- **Doublons** : rôle admin (`is_admin` + RLS admin) + écran `/admin/doublons` de
+  fusion. Doublon réel « 8.6 cherry / 86 Cherry » fusionné.
+- **E6 dispo enseigne** : alimentation auto par les achats + section « Où la trouver »
+  (prix, fraîcheur). **Backfill** fait depuis les achats existants (4 dispos).
+- **Corrections notation** : affichage de la **vraie moyenne** (plus la bayésienne),
+  et **une note par personne/bière** (la plus récente ; les dégustations restent
+  toutes des événements du feed).
+- Migrations 005→008 appliquées. Tout poussé sur GitHub / Vercel.
 
 > ✅ `supabase login` + `link` faits (project ref `cctxlrnuvrgjpemujode`). Le mot de
 > passe base est en cache CLI : `npx supabase db push` fonctionne sans re-saisie.
