@@ -13,8 +13,9 @@ enfin le confort. Les retours du groupe pointent tous vers la saisie facile → 
    manuel d'une canette absente, et case « déjà goûtée avant » (hors feed).
 2. ~~**P2 — Vie sociale (quick wins)**~~ ✅ **fait** : avis du groupe sur la fiche,
    home « bières du moment ».
-3. **P3 — Différenciateurs (specs)** ← *prochain* : disponibilité en enseigne (E6),
-   évolution des prix.
+3. **P3 — Différenciateurs (specs)** ← *en cours* : disponibilité en enseigne (E6)
+   ✅ cœur fait (auto par achat + « Où la trouver ») ; restent le signalement manuel
+   et l'évolution des prix.
 4. **P4 — Social & profil** : stats des potes, avatar/édition de profil, réactions,
    suivre des membres.
 5. **P5 — Engagement** : roulette, événements, badges, Wrapped.
@@ -57,8 +58,12 @@ enfin le confort. Les retours du groupe pointent tous vers la saisie facile → 
   l'aveugle, concours entre membres — avec inscriptions / présence.
 
 ## Disponibilité en enseigne (E6, sprint 5)
-- Signaler « vue au Leclerc X à Y € », alimenté automatiquement par la saisie
-  d'achat. Affichage « vue il y a N jours ». Filtre « près de moi ».
+- ~~Alimentation auto par l'achat + affichage « Où la trouver » (prix, fraîcheur)~~
+  ✅ **fait** (E6-2, E6-3).
+- **Signalement manuel** « vue ici à X € » sans achat (E6-1), et **rupture** (E6-4).
+- **Filtre « près de moi »** (E6-5) : nécessite lat/lng des enseignes + géoloc.
+- **Backfill** : générer la dispo à partir des achats déjà enregistrés (les
+  anciens achats ne l'ont pas alimentée, seuls les nouveaux le font).
 
 ## Classements & stats
 - **Filtrer les classements par style** (meilleure IPA, etc.) (E5-5).
