@@ -18,43 +18,32 @@ export type UserStats = {
   avgPerActiveWeekCents: number | null;
 };
 
-// Clé de semaine ISO (année-semaine) pour compter les semaines « actives ».
-function isoWeekKey(d: Date): string {
-  const date = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
-  const day = date.getUTCDay() || 7;
-  date.setUTCDate(date.getUTCDate() + 4 - day);
-  const yearStart = new Date(Date.UTC(date.getUTCFullYear(), 0, 1));
-  const week = Math.ceil(((date.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
-  return `${date.getUTCFullYear()}-${week}`;
-}
-
+// Agrégations faites en SQL par la vue `user_stats` (migration 005).
 export async function getUserStats(userId: string): Promise<UserStats> {
   const supabase = await createClient();
+  const { data } = await supabase
+    .from("user_stats")
+    .select("total_spent_cents, active_weeks, total_volume_ml, checkin_count")
+    .eq("user_id", userId)
+    .maybeSingle();
 
-  const { data: purchases } = await supabase
-    .from("purchases")
-    .select("total_price_cents, purchased_at")
-    .eq("user_id", userId);
-  const { data: checkins } = await supabase
-    .from("checkins")
-    .select("quantity_ml")
-    .eq("user_id", userId);
+  const totalSpentCents = Number(data?.total_spent_cents ?? 0);
+  const activeWeeks = Number(data?.active_weeks ?? 0);
 
-  const totalSpentCents = (purchases ?? []).reduce((s, p) => s + p.total_price_cents, 0);
-  const totalVolumeMl = (checkins ?? []).reduce((s, c) => s + (c.quantity_ml ?? 0), 0);
-  const checkinCount = (checkins ?? []).length;
-
-  // Moyenne sur les semaines réellement actives (E4-3), pas depuis l'inscription.
-  const weeks = new Set((purchases ?? []).map((p) => isoWeekKey(new Date(p.purchased_at))));
-  const activeWeeks = weeks.size;
-  const avgPerActiveWeekCents = activeWeeks > 0 ? Math.round(totalSpentCents / activeWeeks) : null;
-
-  return { totalSpentCents, totalVolumeMl, checkinCount, activeWeeks, avgPerActiveWeekCents };
+  return {
+    totalSpentCents,
+    totalVolumeMl: Number(data?.total_volume_ml ?? 0),
+    checkinCount: Number(data?.checkin_count ?? 0),
+    activeWeeks,
+    // Moyenne sur les semaines réellement actives (E4-3), pas depuis l'inscription.
+    avgPerActiveWeekCents: activeWeeks > 0 ? Math.round(totalSpentCents / activeWeeks) : null,
+  };
 }
 
 export type ConsumptionPoint = { label: string; ml: number };
 
-// Série de consommation par jour sur la période (S4-04).
+// Série de consommation par jour sur la période (S4-04), via la vue
+// `user_daily_consumption` (agrégation par jour en SQL).
 export async function getConsumptionSeries(
   userId: string,
   period: Period,
@@ -64,20 +53,15 @@ export async function getConsumptionSeries(
   const days = PERIODS.find((p) => p.key === period)?.days ?? null;
 
   let query = supabase
-    .from("checkins")
-    .select("consumed_at, quantity_ml")
+    .from("user_daily_consumption")
+    .select("day, ml")
     .eq("user_id", userId)
-    .order("consumed_at");
+    .order("day");
   if (days != null) {
-    const from = new Date(now.getTime() - days * 86400000).toISOString();
-    query = query.gte("consumed_at", from);
+    const from = new Date(now.getTime() - days * 86400000).toISOString().slice(0, 10);
+    query = query.gte("day", from);
   }
   const { data } = await query;
 
-  const byDay = new Map<string, number>();
-  for (const c of data ?? []) {
-    const key = c.consumed_at.slice(0, 10);
-    byDay.set(key, (byDay.get(key) ?? 0) + (c.quantity_ml ?? 0));
-  }
-  return [...byDay.entries()].map(([label, ml]) => ({ label, ml }));
+  return (data ?? []).map((r) => ({ label: r.day ?? "", ml: Number(r.ml ?? 0) }));
 }

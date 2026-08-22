@@ -72,6 +72,13 @@ export type Database = {
             foreignKeyName: "beer_availability_beer_id_fkey"
             columns: ["beer_id"]
             isOneToOne: false
+            referencedRelation: "beer_stats"
+            referencedColumns: ["beer_id"]
+          },
+          {
+            foreignKeyName: "beer_availability_beer_id_fkey"
+            columns: ["beer_id"]
+            isOneToOne: false
             referencedRelation: "beers"
             referencedColumns: ["id"]
           },
@@ -81,6 +88,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "beer_availability_reported_by_fkey"
+            columns: ["reported_by"]
+            isOneToOne: false
+            referencedRelation: "user_stats"
+            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "beer_availability_store_id_fkey"
@@ -148,6 +162,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "beers_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_stats"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -217,6 +238,13 @@ export type Database = {
             foreignKeyName: "checkins_beer_id_fkey"
             columns: ["beer_id"]
             isOneToOne: false
+            referencedRelation: "beer_stats"
+            referencedColumns: ["beer_id"]
+          },
+          {
+            foreignKeyName: "checkins_beer_id_fkey"
+            columns: ["beer_id"]
+            isOneToOne: false
             referencedRelation: "beers"
             referencedColumns: ["id"]
           },
@@ -233,6 +261,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checkins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_stats"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -256,6 +291,13 @@ export type Database = {
           position?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "list_items_beer_id_fkey"
+            columns: ["beer_id"]
+            isOneToOne: false
+            referencedRelation: "beer_stats"
+            referencedColumns: ["beer_id"]
+          },
           {
             foreignKeyName: "list_items_beer_id_fkey"
             columns: ["beer_id"]
@@ -304,6 +346,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lists_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_stats"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -367,6 +416,13 @@ export type Database = {
             foreignKeyName: "purchases_beer_id_fkey"
             columns: ["beer_id"]
             isOneToOne: false
+            referencedRelation: "beer_stats"
+            referencedColumns: ["beer_id"]
+          },
+          {
+            foreignKeyName: "purchases_beer_id_fkey"
+            columns: ["beer_id"]
+            isOneToOne: false
             referencedRelation: "beers"
             referencedColumns: ["id"]
           },
@@ -383,6 +439,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchases_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_stats"
+            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -418,7 +481,63 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      beer_stats: {
+        Row: {
+          avg_rating: number | null
+          bayesian_rating: number | null
+          beer_id: string | null
+          beer_name: string | null
+          rating_count: number | null
+        }
+        Relationships: []
+      }
+      user_daily_consumption: {
+        Row: {
+          day: string | null
+          ml: number | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "checkins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "checkins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_stats"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      user_stats: {
+        Row: {
+          active_weeks: number | null
+          checkin_count: number | null
+          total_spent_cents: number | null
+          total_volume_ml: number | null
+          user_id: string | null
+        }
+        Insert: {
+          active_weeks?: never
+          checkin_count?: never
+          total_spent_cents?: never
+          total_volume_ml?: never
+          user_id?: string | null
+        }
+        Update: {
+          active_weeks?: never
+          checkin_count?: never
+          total_spent_cents?: never
+          total_volume_ml?: never
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
