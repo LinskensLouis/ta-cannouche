@@ -3,6 +3,24 @@
 > Réservoir d'idées à arbitrer selon l'usage réel du groupe. Rien ici n'est
 > engagé : on pioche quand une idée fait consensus. Ajoute librement.
 
+## Priorité proposée
+
+Logique : d'abord ce qui **remplit la base** (sans données, rien ne vit), puis ce
+qui rend l'app **vivante socialement** (rétention), puis les **différenciateurs**,
+enfin le confort. Les retours du groupe pointent tous vers la saisie facile → P1.
+
+1. **P1 — Saisie sans friction** : noter depuis le catalogue sans scanner +
+   distinction log récent / déjà goûté. *Le plus urgent : conditionne toute la data.*
+2. **P2 — Vie sociale (quick wins)** : avis du groupe sur la fiche bière, home
+   « bières du moment ».
+3. **P3 — Différenciateurs (specs)** : disponibilité en enseigne (E6), évolution
+   des prix.
+4. **P4 — Social & profil** : stats des potes, avatar/édition de profil, réactions,
+   suivre des membres.
+5. **P5 — Engagement** : roulette, événements, badges, Wrapped.
+6. **P6 — Confort & technique** : tags de style, filtres de classement, export CSV,
+   multi-critères, photo hors-ligne, stores (Capacitor), groupes privés.
+
 ## Accès & groupe
 - **Invitation par lien** (E1-7) : garder le groupe fermé proprement — lien
   d'invitation à usage unique / allowlist d'emails, plutôt que de couper
@@ -20,6 +38,17 @@
   évolution de la note moyenne donnée.
 
 ## Social (sprint 5)
+- **Avis du groupe sur la fiche bière** *(retour groupe)* : afficher les
+  commentaires/avis des autres membres sur une canette, pas seulement la note
+  moyenne. Owen : « quand tu cliques dessus tu vois les avis des gens ». Option de
+  tri (récents, ou membres les plus suivis). Gap actuel : la fiche ne montre que
+  ma propre historique + la moyenne.
+- **Home découverte « bières du moment »** *(retour groupe)* : une page d'accueil
+  qui met en avant les canettes tendance / récentes avec la note du groupe, en
+  complément du feed d'activité.
+- **Voir et comparer les stats de ses potes** *(retour groupe)* : consulter le
+  profil et les stats des autres membres (« tu vois les stats de tes potes et les
+  tiennes »). Suppose des profils consultables.
 - **Réactions** sur une dégustation du feed (E7-2).
 - **Listes thématiques** partagées (« Mon top été », « À faire goûter ») (E7-3).
 - **Badges** / objectifs (E7-4).
@@ -42,9 +71,20 @@
 - **Recommandations** basées sur les goûts (E5-6).
 
 ## Référentiel & recherche
-- **Ajout de canettes déjà goûtées, sans scan** : saisie rétroactive pour
-  enregistrer les bières bues par le passé (le formulaire manuel existe déjà, mais
-  le rendre facile d'accès depuis la recherche / une entrée « ajouter à la main »).
+- **Noter direct depuis le catalogue, sans scanner** *(retour groupe, très demandé)* :
+  parcourir la base partagée et poser une note + un avis directement, façon
+  Letterboxd (« tout est déjà genré, tu notes direct »). Le formulaire manuel et la
+  recherche existent ; il manque le parcours « je choisis dans la liste et je note »
+  sans passer par le scan. C'est le levier n°1 pour remplir la base (« ajoutez ce
+  que vous prenez pour faire de la data »).
+- **Distinction log récent / déjà goûté avant** *(retour groupe)* : un log frais
+  apparaît dans le feed (« tes potes voient que tu viens de la boire »), un ajout
+  **rétroactif** (goûté il y a longtemps) est enregistré **sans** polluer l'activité
+  récente. Idée reprise de Letterboxd. Suppose un flag « rétroactif » sur la
+  dégustation, filtré dans le feed.
+- **Liste « à ne pas racheter »** *(retour groupe)* : marquer une canette goûtée
+  qu'on ne veut pas reprendre (avec photo), pour s'en souvenir en rayon (ex. « 86
+  black »). Peut se faire via une note basse + une liste système « à éviter ».
 - **Tags de style pour la recherche** : filtrer/chercher par type (blonde, brune,
   lager, IPA, triple…). Suppose de normaliser le champ `style` (liste de tags
   plutôt que texte libre) et de l'exposer dans la barre de recherche.
