@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ScreenHeader, EmptyState } from "@/components/layout/screen";
-import { ConsumptionChart } from "@/components/stats/consumption-chart";
+import { ConsumptionChartLazy } from "@/components/stats/consumption-chart-lazy";
 import { RankingList } from "@/components/stats/ranking-list";
 import { TierList } from "@/components/stats/tier-list";
 import { createClient } from "@/lib/supabase/server";
@@ -89,7 +89,7 @@ export default async function StatsPage({
               ))}
             </div>
             {series.length > 0 ? (
-              <ConsumptionChart points={series} />
+              <ConsumptionChartLazy points={series} />
             ) : (
               <p className="py-8 text-center text-sm text-alu-mat">Aucune dégustation sur cette période.</p>
             )}

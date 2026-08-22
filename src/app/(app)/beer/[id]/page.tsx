@@ -20,31 +20,34 @@ export default async function BeerPage({ params }: { params: Promise<{ id: strin
 
   if (!beer) notFound();
 
-  const rating = await getBeerRating(id);
   const brewery = displayBrewery(beer.name, beer.breweries?.name);
 
-  // Mon historique sur cette canette (S3-04).
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  const { data: history } = user
-    ? await supabase
-        .from("checkins")
-        .select("id, rating, comment, consumed_at, photo_url")
-        .eq("beer_id", id)
-        .eq("user_id", user.id)
-        .order("consumed_at", { ascending: false })
-    : { data: [] };
+  // Identité via getClaims (vérif locale du JWT, pas d'aller-retour réseau).
+  const { data: claims } = await supabase.auth.getClaims();
+  const userId = claims?.claims?.sub ?? null;
 
-  // Mes achats de cette canette (S4-01), modifiables.
-  const { data: purchases } = user
-    ? await supabase
-        .from("purchases")
-        .select("id, total_price_cents, pack_size, pack_count, purchased_at, stores(name)")
-        .eq("beer_id", id)
-        .eq("user_id", user.id)
-        .order("purchased_at", { ascending: false })
-    : { data: [] };
+  // Note du groupe + mon historique + mes achats, en parallèle.
+  const [rating, historyRes, purchasesRes] = await Promise.all([
+    getBeerRating(id),
+    userId
+      ? supabase
+          .from("checkins")
+          .select("id, rating, comment, consumed_at, photo_url")
+          .eq("beer_id", id)
+          .eq("user_id", userId)
+          .order("consumed_at", { ascending: false })
+      : Promise.resolve({ data: [] }),
+    userId
+      ? supabase
+          .from("purchases")
+          .select("id, total_price_cents, pack_size, pack_count, purchased_at, stores(name)")
+          .eq("beer_id", id)
+          .eq("user_id", userId)
+          .order("purchased_at", { ascending: false })
+      : Promise.resolve({ data: [] }),
+  ]);
+  const history = historyRes.data;
+  const purchases = purchasesRes.data;
 
   return (
     <div className="flex flex-col gap-5 px-5 pt-6">

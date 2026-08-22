@@ -23,10 +23,12 @@ const publicSans = Public_Sans({
   variable: "--font-public-sans",
 });
 
-// Chiffres, prix, dates. IBM Plex Mono n'est pas une variable font : poids explicites.
+// Chiffres, prix, dates. IBM Plex Mono n'est pas une variable font : poids
+// explicites. On ne charge que 400 (défaut) et 600 (semibold), seules graisses
+// utilisées — le 500 était chargé pour rien.
 const ibmPlexMono = IBM_Plex_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["400", "600"],
   display: "swap",
   variable: "--font-ibm-plex-mono",
 });
